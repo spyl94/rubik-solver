@@ -1,9 +1,25 @@
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    cube.cpp \
+    cubeview.cpp
+
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    cube.h \
+    define.h \
+    cubeview.h
+
+
+
+
+
+
+
+
+
+
 
 
 

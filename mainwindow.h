@@ -4,14 +4,20 @@
 #include <QtGui>
 #include <iostream>
 #include <time.h>
+#include <cube.h>
+#include "cubeview.h"
 
 class MainWindow : public QMainWindow
 {
-    //Q_OBJECT
+    Q_OBJECT
 
 public: //méthodes
     MainWindow();
     ~MainWindow();
+    void displayCube();
+    void cubeMixture();
+    QString mixture;
+
 private:
     void creerActions();
     void creerMenus();
@@ -26,6 +32,14 @@ private:
     QAction *actionPropos;
     QAction *actionOptions;
     QAction *actionLancer;
+
+    QTableWidget *tableWidget;
+
+private slots:
+    void loadCubeMixture();
+
+private:
+    Cube c;
 };
 
 

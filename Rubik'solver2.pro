@@ -2,14 +2,18 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     cube.cpp \
-    cubeview.cpp
+    cubeview.cpp \
+    liste.cpp
 
 
 HEADERS += \
     mainwindow.h \
     cube.h \
     define.h \
-    cubeview.h
+    cubeview.h \
+    liste.h
+
+
 
 
 

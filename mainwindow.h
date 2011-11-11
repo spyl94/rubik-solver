@@ -16,6 +16,7 @@ public: //méthodes
     ~MainWindow();
     void displayCube();
     void cubeMixture();
+    void saveCube();
     QString mixture;
 
 private:

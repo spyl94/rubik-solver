@@ -136,9 +136,16 @@ void MainWindow::loadCubeMixture() {
     file.close();
     //qDebug() << mixture;
     cubeMixture();
+    saveCube();
+    displayCube();
     messageStatus->setText("Prêt");
 }
 void MainWindow::cubeMixture(){
     if(mixture == NULL) mixture = "JHGLDZGLYZ@DPU@IHKGRTJ@AWLCVXZSIASMYKCU@HGAXLMMWDDPNPTEKXR@";
     c.mixture(mixture);
+}
+void MainWindow::saveCube(){
+    for(int i =0; i < 54; i++){
+        //qDebug() << c.getColor(i);
+    }
 }

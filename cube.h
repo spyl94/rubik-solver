@@ -12,10 +12,17 @@ public:
     Cube();
     ~Cube();
     int getColor(int i) {return cube[i];}
+    //void setColor(int i, int c) {cube[i] = c;}
     unsigned int* getCube() {return cube;}
-    void mixture(QString s);
     bool rotation(QChar r);
     bool rotation(liste l);
+    unsigned int getRotationCount() {return rotationCount;}
+    void restartRotationCount() {rotationCount = 0;}
+    QChar getFace(int i);
+    QChar getAxe(int i);
+
+    bool resolveFirstFace();
+    bool resolveFirstEdge();
 
 private:
     unsigned int cube[54];

@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 #include <cstdarg>
+#include <QDebug>
 
 #include "liste.h"
 using namespace std;
@@ -100,9 +101,9 @@ liste listePermutations(int n, ...) {
     va_start(ap, n);
     liste m = new maillon;
     liste l = m;
-    for(int i = 0 ; i < n ; i++){
-        noeud* c = listecc(4, va_arg(ap, int*));
-        m->info = c;
+    for(int i = 0 ; i < n ; i++){ // pour chaqun des tableaux reçus...
+        noeud* c = listecc(4, va_arg(ap, int*)); //on crée une sous liste chainée contenant les valeurs du tableau.
+        m->info = c; // que l'on ajoute à notre liste simplemetn chainée.
         if(i < n-1) {
             m->succ = new maillon;
             m = m->succ;
@@ -111,4 +112,40 @@ liste listePermutations(int n, ...) {
     }
     va_end(ap);
     return l;
+}
+/**
+ * Supprime une liste chainée circulaire de noeuds.
+ *
+ * Parametre l : pointeur sur une adresse noeud.
+ *
+ */
+void detruire(noeud** l) {
+        if(l == NULL || *l == NULL) return;
+        noeud* n = NULL;
+        noeud* s = (*l);
+        while((*l)->succ != s) {
+            n = (*l);
+            (*l) = (*l)->succ;
+            delete(n);
+        }
+        delete *l;
+}
+/**
+ * Supprime une liste chainée de liste chainée circulaire (noeuds).
+ *
+ * Parametre l : pointeur sur une liste.
+ *
+ * Retourne : (booléen)? Bonne exécution : Paramètre incorrect.
+ */
+bool deleteListePermutations(liste* l) {
+        if (l == NULL) {  // si un parametre est incorrect
+            return false;
+        }
+        while ((*l) != NULL) { // parcourrir la liste et liberer les maillons un a un
+            maillon* s = (*l);
+            (*l) = (*l)->succ;
+            detruire(&(s->info)); // detruire la sous liste circulaire
+            delete s;
+        }
+        return true;
 }

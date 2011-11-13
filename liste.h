@@ -43,5 +43,5 @@ noeud* listecc(int n, int* t);
  * Retourne : la liste.
  */
 liste listePermutations(int n, ...);
-
+bool deleteListePermutations(liste* l);
 #endif // LISTE_H

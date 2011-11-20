@@ -11,11 +11,16 @@
 #include <iostream>
 #include <time.h>
 #include <cube.h>
-#include "cubeview.h"
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+
+    /* DATA */
+private:
+    Cube c; // notre objet cube.
+    QString mixture; // contient les opérations de mélange.
+    QTime time; //permet de calculer le temps d'éxécution.
 
 public:
     MainWindow();
@@ -26,8 +31,8 @@ public:
     void initOutput();
     QColor color(int i);
 
+     /* GUI */
 private:
-    /* GUI */
     void creerActions();
     void creerMenus();
     void creerBarresOutils();
@@ -46,13 +51,28 @@ private:
     QAction *actionD;
     QAction *actionE;
     QAction *actionF;
-
+    QAction *actionG;
+    QAction *actionH;
+    QAction *actionI;
+    QAction *actionJ;
+    QAction *actionK;
+    QAction *actionL;
+    QAction *actionM;
+    QAction *actionN;
+    QAction *actionO;
+    QAction *actionP;
+    QAction *actionQ;
+    QAction *actionR;
+    QAction *actionS;
+    QAction *actionT;
+    QAction *actionU;
+    QAction *actionV;
+    QAction *actionW;
+    QAction *actionX;
+    QAction *actionY;
+    QAction *actionZ;
+    QAction *actionAr;
     QTableWidget *tableWidget;
-
-    /* DATA */
-    Cube c; // notre objet cube.
-    QString mixture; // contient les opérations de mélange.
-    QTime time; //permet de calculer le temps d'éxécution.
 
 private slots:
     void loadCubeMixture();
@@ -63,6 +83,27 @@ private slots:
     void rotationD();
     void rotationE();
     void rotationF();
+    void rotationG();
+    void rotationH();
+    void rotationI();
+    void rotationJ();
+    void rotationK();
+    void rotationL();
+    void rotationM();
+    void rotationN();
+    void rotationO();
+    void rotationP();
+    void rotationQ();
+    void rotationR();
+    void rotationS();
+    void rotationT();
+    void rotationU();
+    void rotationV();
+    void rotationW();
+    void rotationX();
+    void rotationY();
+    void rotationZ();
+    void rotationAr();
 };
 
 

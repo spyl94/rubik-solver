@@ -10,6 +10,7 @@ class Cube
 {
 public:
     Cube();
+    Cube(unsigned int* tab);
     ~Cube();
     int getColor(int i) {return cube[i];}
     //void setColor(int i, int c) {cube[i] = c;}
@@ -20,13 +21,16 @@ public:
     void restartRotationCount() {rotationCount = 0;}
     QChar getFace(int i);
     QChar getAxe(int i);
+    Cube genRotation(QChar c);
 
     bool resolveFirstFace();
     bool resolveFirstEdge();
+    bool isResolveFirstEdge();
 
 private:
     unsigned int cube[54];
     unsigned int rotationCount;
+
 
 };
 

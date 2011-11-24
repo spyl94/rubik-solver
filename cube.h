@@ -24,7 +24,7 @@ public:
     Cube genRotation(QChar c);
 
     bool resolveFirstFace();
-    bool resolveFirstEdge();
+    bool resolveFirstEdge(QString* solution);
     bool resolveFirstCross();
     bool isResolveFirstEdge();
     bool isResolveFirstCross();

@@ -163,13 +163,19 @@ void MainWindow::start(){
 
     /* Lancement de l'algorithme */
     c.restartRotationCount();
+    QString solution = "";
     time.start();
 
     /* On resout la croix sur la première face */
-    c.resolveFirstEdge();
-    displayCube();
-
-    //c.resolveFirstCross();
+    if(!c.resolveFirstEdge(&solution)) {
+        QMessageBox::information(this, "La simulation a échouée.","");
+        return;
+    }
+    for(int i =0; i < solution.length(); i++)
+    {
+        c.rotation(solution.at(i));
+        saveCube(solution.at(i));
+    }
     displayCube();
 
     QString message= "La simulation s'est déroulée avec succès! \n";

@@ -156,8 +156,9 @@ bool Cube::resolveFirstFace() {
 
 #define nbPermuMax 9
 
-QString genFirstEdge(Cube c, QString str, int i, int* min){
-    if(c.isResolveFirstEdge()){
+
+QString gen(Cube c, QString str, int i, int* min,bool (Cube::*pt2Member)() ){
+    if((c.*pt2Member)()){
         qDebug() << "Résolu avec" << str;
         return str.append(QChar('1'));
     }
@@ -166,7 +167,7 @@ QString genFirstEdge(Cube c, QString str, int i, int* min){
 
     if(i <= *min && !str.endsWith("AAA")) {
         QString strCopy = str;
-        QString isDone = genFirstEdge(c.genRotation(QChar('A')), strCopy.append(QChar('A')),i+1,min);
+        QString isDone = gen(c.genRotation(QChar('A')), strCopy.append(QChar('A')),i+1,min, pt2Member);
         if(isDone.endsWith("1")){
             if(solutionOptimizer(&isDone) <= *min) {
                 bestSol = isDone;
@@ -177,7 +178,7 @@ QString genFirstEdge(Cube c, QString str, int i, int* min){
     }
     if(i <= *min && !str.endsWith("BBB")) {
         QString strCopy = str;
-        QString isDone = genFirstEdge(c.genRotation(QChar('B')), strCopy.append(QChar('B')),i+1,min);
+        QString isDone = gen(c.genRotation(QChar('B')), strCopy.append(QChar('B')),i+1,min, pt2Member);
         if(isDone.endsWith("1")){
             if(solutionOptimizer(&isDone) <= *min) {
                 bestSol = isDone;
@@ -188,7 +189,7 @@ QString genFirstEdge(Cube c, QString str, int i, int* min){
     }
     if(i <= *min && !str.endsWith("CCC")) {
         QString strCopy = str;
-        QString isDone = genFirstEdge(c.genRotation(QChar('C')), strCopy.append(QChar('C')),i+1,min);
+        QString isDone = gen(c.genRotation(QChar('C')), strCopy.append(QChar('C')),i+1,min, pt2Member);
         if(isDone.endsWith("1")){
             if(solutionOptimizer(&isDone) <= *min) {
                 bestSol = isDone;
@@ -199,7 +200,7 @@ QString genFirstEdge(Cube c, QString str, int i, int* min){
     }
     if(i <= *min && !str.endsWith("DDD")) {
         QString strCopy = str;
-        QString isDone = genFirstEdge(c.genRotation(QChar('D')), strCopy.append(QChar('D')),i+1,min);
+        QString isDone = gen(c.genRotation(QChar('D')), strCopy.append(QChar('D')),i+1,min, pt2Member);
         if(isDone.endsWith("1")){
             if(solutionOptimizer(&isDone) <= *min) {
                 bestSol = isDone;
@@ -210,7 +211,7 @@ QString genFirstEdge(Cube c, QString str, int i, int* min){
     }
     if(i <= *min && !str.endsWith("EEE")) {
         QString strCopy = str;
-        QString isDone = genFirstEdge(c.genRotation(QChar('E')), strCopy.append(QChar('E')),i+1,min);
+        QString isDone = gen(c.genRotation(QChar('E')), strCopy.append(QChar('E')),i+1,min, pt2Member);
         if(isDone.endsWith("1")){
             if(solutionOptimizer(&isDone) <= *min) {
                 bestSol = isDone;
@@ -221,7 +222,7 @@ QString genFirstEdge(Cube c, QString str, int i, int* min){
     }
     if(i <= *min && !str.endsWith("FFF")) {
         QString strCopy = str;
-        QString isDone = genFirstEdge(c.genRotation(QChar('F')), strCopy.append(QChar('F')),i+1,min);
+        QString isDone = gen(c.genRotation(QChar('F')), strCopy.append(QChar('F')),i+1,min, pt2Member);
         if(isDone.endsWith("1")){
             if(solutionOptimizer(&isDone) <= *min) {
                 bestSol = isDone;
@@ -232,86 +233,6 @@ QString genFirstEdge(Cube c, QString str, int i, int* min){
     }
     return bestSol;
 }
-
-QString genFirstCross(Cube c, QString str, int i, int* min){
-    if(c.isResolveFirstCross()){
-        qDebug() << "Résolu avec" << str;
-        return str.append(QChar('1'));
-    }
-    if(i==nbPermuMax) return 0;
-    QString bestSol = "";
-    qDebug() << str << i;
-    if(i <= *min && !str.endsWith("AAA")) {
-        QString strCopy = str;
-        QString isDone = genFirstCross(c.genRotation(QChar('A')), strCopy.append(QChar('A')),i+1,min);
-        if(isDone.endsWith("1")){
-            if(solutionOptimizer(&isDone) <= *min) {
-                bestSol = isDone;
-                *min = isDone.size();
-            }
-            if(i!=0) return bestSol;
-        }
-    }
-    if(i <= *min && !str.endsWith("BBB")) {
-        QString strCopy = str;
-        QString isDone = genFirstCross(c.genRotation(QChar('B')), strCopy.append(QChar('B')),i+1,min);
-        if(isDone.endsWith("1")){
-            if(solutionOptimizer(&isDone) <= *min) {
-                bestSol = isDone;
-                *min = isDone.size();
-            }
-            if(i!=0) return bestSol;
-        }
-    }
-    if(i <= *min && !str.endsWith("CCC")) {
-        QString strCopy = str;
-        QString isDone = genFirstCross(c.genRotation(QChar('C')), strCopy.append(QChar('C')),i+1,min);
-        if(isDone.endsWith("1")){
-            if(solutionOptimizer(&isDone) <= *min) {
-                bestSol = isDone;
-                *min = isDone.size();
-            }
-            if(i!=0) return bestSol;
-        }
-    }
-    if(i <= *min && !str.endsWith("DDD")) {
-        QString strCopy = str;
-        QString isDone = genFirstCross(c.genRotation(QChar('D')), strCopy.append(QChar('D')),i+1,min);
-        if(isDone.endsWith("1")){
-            if(solutionOptimizer(&isDone) <= *min) {
-                bestSol = isDone;
-                *min = isDone.size();
-            }
-            if(i!=0) return bestSol;
-        }
-    }
-    if(i <= *min && !str.endsWith("EEE")) {
-        QString strCopy = str;
-        QString isDone = genFirstCross(c.genRotation(QChar('E')), strCopy.append(QChar('E')),i+1,min);
-        if(isDone.endsWith("1")){
-            if(solutionOptimizer(&isDone) <= *min) {
-                bestSol = isDone;
-                *min = isDone.size();
-            }
-            if(i!=0) return bestSol;
-        }
-    }
-    if(i <= *min && !str.endsWith("FFF")) {
-        QString strCopy = str;
-        QString isDone = genFirstCross(c.genRotation(QChar('F')), strCopy.append(QChar('F')),i+1,min);
-        if(isDone.endsWith("1")){
-            if(solutionOptimizer(&isDone) <= *min) {
-                bestSol = isDone;
-                *min = isDone.size();
-            }
-            if(i!=0) return bestSol;
-        }
-    }
-    return bestSol;
-}
-
-
-
 
 bool Cube::isResolveFirstEdge(){
     if(cube[1] == WHITE && cube[3] == WHITE && cube[5] == WHITE && cube[7] == WHITE) return true;
@@ -324,30 +245,21 @@ bool Cube::isResolveFirstCross(){
     return false;
 }
 
-bool Cube::resolveFirstEdge() {
+bool Cube::resolveFirstEdge(QString* solution) {
      if(isResolveFirstEdge()) return true;
-
      int min = nbPermuMax;
-     QString solution = genFirstEdge(*this, "", 0, &min).replace("1","");
-     qDebug() << "genFirstEdge()" << solution;
-     if(solution=="") return false; // On a pas trouvé de solution
-     for(int i =0; i < solution.length(); i++)
-     {
-         rotation(solution.at(i));
-     }
+     *solution = gen(*this, "", 0, &min, &Cube::isResolveFirstEdge).replace("1","");
+     qDebug() << "genFirstEdge()" << *solution;
+     if(*solution=="") return false; // On a pas trouvé de solution
     return true;
 }
 
-bool Cube::resolveFirstCross() {
+bool Cube::resolveFirstCross(QString* solution) {
      if(isResolveFirstCross()) return true;
      int min = nbPermuMax;
-     QString solution = genFirstCross(*this, "", 0, &min).replace("1","");
-     qDebug() << "genFirstCross()" << solution;
-     if(solution=="") return false; // On a pas trouvé de solution
-     for(int i =0; i < solution.length(); i++)
-     {
-         rotation(solution.at(i));
-     }
+     *solution = gen(*this, "", 0, &min, &Cube::isResolveFirstCross).replace("1","");
+     qDebug() << "genFirstCross()" << *solution;
+     if(*solution=="") return false; // On a pas trouvé de solution
     return true;
 }
 
@@ -358,50 +270,4 @@ bool Cube::resolveFirstCross() {
     if(i <= 35) return QChar('H');
     if(i <= 42) return QChar('D');
     return QChar('B');
-}*/
-
-/*
-QChar Cube::getAxe(int i){
-    switch(i) {
-    case 1:
-    case 4:
-    case 7:
-    case 21:
-    case 22:
-    case 23:
-    case 28:
-    case 31:
-    case 34:
-    case 48:
-    case 49:
-    case 50:
-    case 41:
-    case 40:
-    case 39:
-    case 10:
-    case 13:
-    case 16:
-        return QChar('Y');
-    case 18:
-    case 19:
-    case 20:
-    case 2:
-    case 5:
-    case 8:
-    case 29:
-    case 32:
-    case 35:
-    case 45:
-    case 46:
-    case 47:
-    case 36:
-    case 37:
-    case 38:
-    case 11:
-    case 14:
-    case 17:
-        return QChar('X');
-    default:
-        return QChar('Z');
-    }
 }*/

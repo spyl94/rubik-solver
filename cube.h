@@ -11,27 +11,32 @@ class Cube
 public:
     Cube();
     Cube(unsigned int* tab);
-    ~Cube();
     int getColor(int i) {return cube[i];}
-    //void setColor(int i, int c) {cube[i] = c;}
     unsigned int* getCube() {return cube;}
     bool rotation(QChar r);
-    bool rotation(liste l);
     unsigned int getRotationCount() {return rotationCount;}
     void restartRotationCount() {rotationCount = 0;}
-    /*QChar getFace(int i);
-    QChar getAxe(int i);*/
-    Cube genRotation(QChar c);
 
-    bool resolveFirstFace();
+Cube genRotation(QChar c);
+    bool resolveFirstFace(QString* solution);
     bool resolveFirstEdge(QString* solution);
-    bool resolveFirstCross();
-    bool isResolveFirstEdge();
-    bool isResolveFirstCross();
+    bool resolveFirstCross(QString* solution);
+    bool resolveFirst1Cross(QString* solution);
+    bool resolveFirst2Cross(QString* solution);
+    bool resolveFirst3Cross(QString* solution);
 
 private:
     unsigned int cube[54];
     unsigned int rotationCount;
+
+    bool isResolveFirstEdge();
+    bool isResolveFirstCross();
+    bool isResolveFirstFace();
+    bool isResolveFirst1Cross();
+    bool isResolveFirst2Cross();
+    bool isResolveFirst3Cross();
+    bool rotation(liste l);
+
 
 
 };

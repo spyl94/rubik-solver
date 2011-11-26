@@ -12,58 +12,6 @@
 using namespace std;
 
 /**
- * Représente une liste sous forme d'une chaîne de caractères. La liste peut
- * être linéaire ou circulaire.
- *
- * Parametre l : liste a représenter.
- *
- * Retourne : la chaîne représentant l.
- */
-string chainel(liste l) {
-        if (l == NULL) {
-                return ".";
-        }
-        ostringstream r;
-        maillon* c = l;
-        do {
-                r << "[" << c->info->info << "]";
-                if (c->succ == NULL || c->succ == l) {
-                    break;
-                }
-                r << "->";
-                c = c->succ;
-        } while (true);
-        r << (c->succ == NULL ? "|" : ">");
-        return r.str();
-}
-
-/**
- * Représente une liste sous forme d'une chaîne de caractères. La liste peut
- * être linéaire ou circulaire.
- *
- * Parametre l : liste a représenter.
- *
- * Retourne : la chaîne représentant l.
- */
-string chainesl(noeud* l) {
-        if (l == NULL) {
-                return ".";
-        }
-        ostringstream r;
-        noeud* c = l;
-        do {
-                r << "[" << c->info << "]";
-                if (c->succ == NULL || c->succ == l) {
-                    break;
-                }
-                r << "->";
-                c = c->succ;
-        } while (true);
-        r << (c->succ == NULL ? "|" : ">");
-        return r.str();
-}
-
-/**
  * Convertit un tableau d'entiers en une liste chainee, simplement circulaire.
  *
  * Parametre n : le nombre d'elements de t.
@@ -113,6 +61,7 @@ liste listePermutations(int n, ...) {
     va_end(ap);
     return l;
 }
+
 /**
  * Supprime une liste chainée circulaire de noeuds.
  *
@@ -130,6 +79,7 @@ void detruire(noeud** l) {
         }
         delete *l;
 }
+
 /**
  * Supprime une liste chainée de liste chainée circulaire (noeuds).
  *

@@ -40,12 +40,13 @@ QColor MainWindow::color(int i) {
         return QColor("orange");
     case 5:
         return QColor("green");
-    default:
+    case 6:
         return QColor("yellow");
+    default:
+        return QColor("white");
     }
 }
 void MainWindow::displayCube(){
-    //CubeView v(this, c.getCube() );
     for(int i = 0; i < 3; i++){
         QTableWidgetItem *newItem = new QTableWidgetItem(tr("%1").arg(this->c.getColor(24+i)));
         newItem->setBackgroundColor(color(this->c.getColor(24+i)));
@@ -98,6 +99,8 @@ void MainWindow::displayCube(){
         newItem->setBackgroundColor(color(this->c.getColor(45+(i%3))));
         tableWidget->setItem(i, 5, newItem);
     }
+    qApp->processEvents();
+
 }
 void MainWindow::loadCubeMixture() {
     messageStatus->setText("Sélection du fichier");
@@ -167,7 +170,10 @@ void MainWindow::start(){
     time.start();
 
     /* On resout la croix sur la première face */
-    if(!c.resolveFirstEdge(&solution)) {
+
+
+    /* On resout la croix sur la première face */
+    if(!c.resolveFirst1Cross(&solution)) {
         QMessageBox::information(this, "La simulation a échouée.","");
         return;
     }
@@ -176,6 +182,53 @@ void MainWindow::start(){
         c.rotation(solution.at(i));
         saveCube(solution.at(i));
     }
+    this->displayCube();
+    solution = "";
+
+    if(!c.resolveFirst2Cross(&solution)) {
+        QMessageBox::information(this, "La simulation a échouée.","");
+        return;
+    }
+    for(int i =0; i < solution.length(); i++)
+    {
+        c.rotation(solution.at(i));
+        saveCube(solution.at(i));
+    }
+    solution = "";
+    displayCube();
+    if(!c.resolveFirst3Cross(&solution)) {
+        QMessageBox::information(this, "La simulation a échouée.","");
+        return;
+    }
+    for(int i =0; i < solution.length(); i++)
+    {
+        c.rotation(solution.at(i));
+        saveCube(solution.at(i));
+    }
+    solution = "";
+    displayCube();
+    if(!c.resolveFirstCross(&solution)) {
+        QMessageBox::information(this, "La simulation a échouée.","");
+        return;
+    }
+    for(int i =0; i < solution.length(); i++)
+    {
+        c.rotation(solution.at(i));
+        saveCube(solution.at(i));
+    }
+    solution = "";
+    displayCube();
+
+    if(!c.resolveFirstFace(&solution)) {
+        QMessageBox::information(this, "La simulation a échouée.","");
+        return;
+    }
+    for(int i =0; i < solution.length(); i++)
+    {
+        c.rotation(solution.at(i));
+        saveCube(solution.at(i));
+    }
+    solution = "";
     displayCube();
 
     QString message= "La simulation s'est déroulée avec succès! \n";

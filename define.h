@@ -8,4 +8,6 @@
 #define GREEN 5
 #define YELLOW 6
 
+#define nbPermuMax 10
+
 #endif // DEFINE_H

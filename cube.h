@@ -25,6 +25,7 @@ Cube genRotation(QChar c);
     bool resolveFirst2Cross(QString* solution);
     bool resolveFirst3Cross(QString* solution);
 
+
 private:
     unsigned int cube[54];
     unsigned int rotationCount;
@@ -35,6 +36,7 @@ private:
     bool isResolveFirst1Cross();
     bool isResolveFirst2Cross();
     bool isResolveFirst3Cross();
+    bool is8Corner();
     bool rotation(liste l);
 
 

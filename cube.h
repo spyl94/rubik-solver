@@ -36,7 +36,7 @@ private:
     bool isResolveFirst1Cross();
     bool isResolveFirst2Cross();
     bool isResolveFirst3Cross();
-    bool is35Orange45White42GREEN();
+    bool is8Corner();
     bool rotation(liste l);
 
 

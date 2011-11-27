@@ -17,6 +17,8 @@ Cube::Cube() {
     for(; i<45; i++)cube[i] = GREEN;
     for(; i<54; i++)cube[i] = YELLOW;
     rotationCount = 0;
+    //Pour afficher les indices:
+    //for(int i=0; i <54; i++) cube[i] = i;
 }
 
 /**
@@ -45,16 +47,16 @@ bool Cube::rotation(QChar r){
        l = listePermutations(5,(int[]){0,6,8,2},(int[]){1,3,7,5},(int[]){26,17,29,38},(int[]){23,14,28,37},(int[]){20,11,27,36});
     else if(r == QChar('C'))
        // l = listePermutations(5,(int[]){6,33,53,26},(int[]){3,30,52,25},(int[]){0,27,51,24},(int[]){17,15,9,11},(int[]){14,16,12,10});
-       l = listePermutations(5,(int[]){24,18,20,26},(int[]){21,19,23,25},(int[]){53,44,2,11},(int[]){50,41,1,10},(int[]){47,38,0,9});
+       l = listePermutations(5,(int[]){24,26,20,18},(int[]){21,25,23,19},(int[]){53,11,2,44},(int[]){50,10,1,41},(int[]){47,9,0,38});
     else if(r == QChar('D'))
         //l = listePermutations(5,(int[]){8,2,0,6},(int[]){7,5,1,3},(int[]){29,38,26,17},(int[]){28,37,23,14},(int[]){27,36,20,11});
-       l = listePermutations(5,(int[]){6,33,53,26},(int[]){3,30,52,25},(int[]){0,27,51,24},(int[]){17,15,9,11},(int[]){14,16,12,10});
+       l = listePermutations(5,(int[]){6,26,53,33},(int[]){3,25,52,30},(int[]){0,24,51,27},(int[]){17,11,9,15},(int[]){14,10,12,16});
     else if(r == QChar('E'))
         //l = listePermutations(3,(int[]){32,41,25,16},(int[]){31,40,22,13},(int[]){30,39,19,10});
-       l = listePermutations(5,(int[]){35,44,24,15},(int[]){34,43,21,12},(int[]){33,42,18,9},(int[]){45,51,53,47},(int[]){48,52,50,46});
+       l = listePermutations(5,(int[]){35,15,24,44},(int[]){34,12,21,43},(int[]){33,9,18,42},(int[]){45,51,53,47},(int[]){48,52,50,46});
     else if(r == QChar('F'))
         //l = listePermutations(5,(int[]){35,44,24,15},(int[]){34,43,21,12},(int[]){33,42,18,9},(int[]){45,51,53,47},(int[]){48,52,50,46});
-       l = listePermutations(5,(int[]){27,29,35,33},(int[]){28,32,34,30},(int[]){6,36,45,15},(int[]){7,39,48,16},(int[]){8,42,51,17});
+       l = listePermutations(5,(int[]){27,33,35,29},(int[]){28,30,34,32},(int[]){6,15,45,36},(int[]){7,16,48,39},(int[]){8,17,51,42});
     else if(r == QChar('G'))
        l = listePermutations(5,(int[]){8,20,47,35},(int[]){5,19,46,32},(int[]){2,18,45,29},(int[]){36,38,44,42},(int[]){37,41,43,39});
         //return rotation(QChar('A')) && rotation(QChar('A')) &&  rotation(QChar('A'));
@@ -63,16 +65,17 @@ bool Cube::rotation(QChar r){
        l = listePermutations(5,(int[]){0,2,8,6},(int[]){1,5,7,3},(int[]){26,38,29,17},(int[]){23,37,28,14},(int[]){20,36,27,11});
     else if(r == QChar('I'))
         //return rotation(QChar('C')) && rotation(QChar('C')) &&  rotation(QChar('C'));
-       l = listePermutations(5,(int[]){24,26,20,18},(int[]){21,25,23,19},(int[]){53,11,2,44},(int[]){50,10,1,41},(int[]){47,9,0,38});
+       l = listePermutations(5,(int[]){24,18,20,26},(int[]){21,19,23,25},(int[]){53,44,2,11},(int[]){50,41,1,10},(int[]){47,38,0,9});
     else if(r == QChar('J'))
        // return rotation(QChar('D')) && rotation(QChar('D')) &&  rotation(QChar('D'));
-       l = listePermutations(5,(int[]){6,26,53,33},(int[]){3,25,52,30},(int[]){0,24,51,27},(int[]){17,11,9,15},(int[]){14,10,12,16});
+       l = listePermutations(5,(int[]){6,33,53,26},(int[]){3,30,52,25},(int[]){0,27,51,24},(int[]){17,15,9,11},(int[]){14,16,12,10});
     else if(r == QChar('K'))
        // return rotation(QChar('E')) && rotation(QChar('E')) &&  rotation(QChar('E'));
-       l = listePermutations(5,(int[]){35,15,24,44},(int[]){34,12,21,43},(int[]){33,9,18,42},(int[]){45,47,53,51},(int[]){48,46,50,52});
+       l = listePermutations(5,(int[]){35,44,24,15},(int[]){34,43,21,12},(int[]){33,42,18,9},(int[]){45,47,53,51},(int[]){48,46,50,52});
     else if(r == QChar('L'))
        // return rotation(QChar('F')) && rotation(QChar('F')) &&  rotation(QChar('F'));
-       l = listePermutations(5,(int[]){27,33,35,29},(int[]){28,30,34,32},(int[]){6,15,45,36},(int[]){7,16,48,39},(int[]){8,17,51,42});
+
+       l = listePermutations(5,(int[]){27,29,35,33},(int[]){28,32,34,30},(int[]){6,36,45,15},(int[]){7,39,48,16},(int[]){8,42,51,17});
     else if(r == QChar('M'))
         return rotation(QChar('A')) && rotation(QChar('A')) && rotationCount--;
     else if(r == QChar('N'))
@@ -300,13 +303,13 @@ bool Cube::isResolveFirst3Cross(){
 
     return false;
 }
-bool Cube::is35Orange45White42GREEN(){
+bool Cube::is8Corner() {
     if(cube[35]==ORANGE && cube[45] == WHITE && cube[42] == GREEN && isResolveFirstCross()) return true;
-    //if(cube[35]==WHITE && cube[45] == ORANGE && cube[42] == GREEN && isResolveFirstCross()) return true;
+    if(cube[35]==WHITE && cube[45] == ORANGE && cube[42] == GREEN && isResolveFirstCross()) return true;
     if(cube[35]==ORANGE && cube[45] == GREEN && cube[42] == WHITE && isResolveFirstCross()) return true;
-    //if(cube[35]==WHITE && cube[45] == GREEN && cube[42] == ORANGE && isResolveFirstCross()) return true;
-    //if(cube[35]==GREEN && cube[45] == WHITE && cube[42] == ORANGE && isResolveFirstCross()) return true;
-    //if(cube[35]==GREEN && cube[45] == ORANGE && cube[42] == WHITE && isResolveFirstCross()) return true;
+    if(cube[35]==WHITE && cube[45] == GREEN && cube[42] == ORANGE && isResolveFirstCross()) return true;
+    if(cube[35]==GREEN && cube[45] == WHITE && cube[42] == ORANGE && isResolveFirstCross()) return true;
+    if(cube[35]==GREEN && cube[45] == ORANGE && cube[42] == WHITE && isResolveFirstCross()) return true;
     return false;
 }
 
@@ -328,35 +331,34 @@ bool Cube::resolveFirstFace(QString* solution) {
      Cube copy(getCube());
      int min = nbPermuMax;
      if(cube[8]!=WHITE || cube[29] != ORANGE || cube[36] != GREEN) {
-         tmp = gen(*this, "", 0, &min, &Cube::is35Orange45White42GREEN).replace("1","");
+         tmp = gen(*this, "", 0, &min, &Cube::is8Corner).replace("1","");
          qDebug() << "gen8()" << tmp;
-         if(tmp != "") {
-             for(int i =0; i < tmp.length(); i++)
-             {
-                 copy.rotation(tmp.at(i));
-             }
-             *solution += tmp;
-             return true;
-
-             do {
-                 copy.rotation(QChar('A'));
-                 copy.rotation(QChar('K'));
-                 copy.rotation(QChar('G'));
-                 copy.rotation(QChar('E'));
-                 tmp+="AKGE";
-             }while(!(copy.getColor(8)==WHITE && copy.getColor(29) == ORANGE && copy.getColor(36)==GREEN));
-         }
+         if(tmp == "") return false;
+         for(int i =0; i < tmp.length(); i++) copy.rotation(tmp.at(i));
+         do {
+             copy.rotation(QChar('A'));
+             copy.rotation(QChar('E'));
+             copy.rotation(QChar('G'));
+             copy.rotation(QChar('K'));
+             tmp+="AEGK";
+         }while(!(copy.getColor(8)==WHITE && copy.getColor(29) == ORANGE && copy.getColor(36)==GREEN));
+         solutionOptimizer(&tmp);
+         *solution += tmp;
      }
-     *solution += tmp;
      tmp = "";
-     return true;
      min = nbPermuMax;
+
+
+
+
+
+     /*
      *solution = gen(*this, "", 0, &min, &Cube::is35Orange45White42GREEN).replace("1","");
      qDebug() << "genFirstFace()" << *solution;
      for(int i =0; i < solution->length(); i++)
      {
         rotation(solution->at(i));
-     }
+     }*/
 
      return true;
 }

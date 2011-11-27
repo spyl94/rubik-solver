@@ -207,6 +207,7 @@ void MainWindow::start(){
     }
     solution = "";
     displayCube();
+
     if(!c.resolveFirstCross(&solution)) {
         QMessageBox::information(this, "La simulation a échouée.","");
         return;
@@ -228,7 +229,6 @@ void MainWindow::start(){
         c.rotation(solution.at(i));
         saveCube(solution.at(i));
     }
-    solution = "";
     displayCube();
 
     QString message= "La simulation s'est déroulée avec succès! \n";

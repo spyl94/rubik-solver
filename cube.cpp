@@ -273,16 +273,40 @@ bool Cube::isResolveFirstCross(){
 
 bool Cube::isResolveFirst1Cross(){
     if(cube[1] == WHITE && cube[23] == RED ) return true;
+    if(cube[7] == WHITE && cube[28] == ORANGE) return true;
+    if(cube[3] == WHITE && cube[14] == BLUE) return true;
+    if(cube[5] == WHITE && cube[37] == GREEN) return true;
     return false;
 }
 
 bool Cube::isResolveFirst2Cross(){
     if(cube[1] == WHITE && cube[23] == RED && cube[7] == WHITE && cube[28] == ORANGE) return true;
+    if(cube[1] == WHITE && cube[23] == RED && cube[3] == WHITE && cube[14] == BLUE) return true;
+    if(cube[1] == WHITE && cube[23] == RED && cube[5] == WHITE && cube[37] == GREEN) return true;
+    if(cube[7] == WHITE && cube[28] == ORANGE && cube[3] == WHITE && cube[14] == BLUE) return true;
+    if(cube[7] == WHITE && cube[28] == ORANGE && cube[5] == WHITE && cube[37] == GREEN) return true;
+    if(cube[3] == WHITE && cube[14] == BLUE && cube[5] == WHITE && cube[37] == GREEN ) return true;
     return false;
 }
 
 bool Cube::isResolveFirst3Cross(){
     if(cube[1] == WHITE && cube[23] == RED && cube[7] == WHITE && cube[28] == ORANGE && cube[5] == WHITE && cube[37] == GREEN) return true;
+    if(cube[1] == WHITE && cube[23] == RED && cube[7] == WHITE && cube[28] == ORANGE && cube[3] == WHITE && cube[14] == BLUE) return true;
+    if(cube[1] == WHITE && cube[23] == RED && cube[5] == WHITE && cube[37] == GREEN && cube[3] == WHITE && cube[14] == BLUE) return true;
+    if(cube[3] == WHITE && cube[14] == BLUE && cube[5] == WHITE && cube[37] == GREEN && cube[7] == WHITE && cube[28] == ORANGE) return true;
+    if(cube[3] == WHITE && cube[14] == BLUE && cube[5] == WHITE && cube[37] == GREEN && cube[1] == WHITE && cube[23] == RED) return true;
+    if(cube[3] == WHITE && cube[14] == BLUE && cube[7] == WHITE && cube[28] == ORANGE && cube[1] == WHITE && cube[23] == RED) return true;
+    if(cube[28] == ORANGE && cube[1] == WHITE && cube[3] == WHITE && cube[14] == BLUE && cube[1] == WHITE && cube[23] == RED) return true;
+
+    return false;
+}
+bool Cube::is35Orange45White42GREEN(){
+    if(cube[35]==ORANGE && cube[45] == WHITE && cube[42] == GREEN && isResolveFirstCross()) return true;
+    //if(cube[35]==WHITE && cube[45] == ORANGE && cube[42] == GREEN && isResolveFirstCross()) return true;
+    if(cube[35]==ORANGE && cube[45] == GREEN && cube[42] == WHITE && isResolveFirstCross()) return true;
+    //if(cube[35]==WHITE && cube[45] == GREEN && cube[42] == ORANGE && isResolveFirstCross()) return true;
+    //if(cube[35]==GREEN && cube[45] == WHITE && cube[42] == ORANGE && isResolveFirstCross()) return true;
+    //if(cube[35]==GREEN && cube[45] == ORANGE && cube[42] == WHITE && isResolveFirstCross()) return true;
     return false;
 }
 
@@ -299,11 +323,42 @@ bool Cube::isResolveFirstFace() {
 
 bool Cube::resolveFirstFace(QString* solution) {
      if(isResolveFirstFace()) return true;
+
+     QString tmp;
+     Cube copy(getCube());
      int min = nbPermuMax;
-     *solution = gen(*this, "", 0, &min, &Cube::isResolveFirstFace).replace("1","");
+     if(cube[8]!=WHITE || cube[29] != ORANGE || cube[36] != GREEN) {
+         tmp = gen(*this, "", 0, &min, &Cube::is35Orange45White42GREEN).replace("1","");
+         qDebug() << "gen8()" << tmp;
+         if(tmp != "") {
+             for(int i =0; i < tmp.length(); i++)
+             {
+                 copy.rotation(tmp.at(i));
+             }
+             *solution += tmp;
+             return true;
+
+             do {
+                 copy.rotation(QChar('A'));
+                 copy.rotation(QChar('K'));
+                 copy.rotation(QChar('G'));
+                 copy.rotation(QChar('E'));
+                 tmp+="AKGE";
+             }while(!(copy.getColor(8)==WHITE && copy.getColor(29) == ORANGE && copy.getColor(36)==GREEN));
+         }
+     }
+     *solution += tmp;
+     tmp = "";
+     return true;
+     min = nbPermuMax;
+     *solution = gen(*this, "", 0, &min, &Cube::is35Orange45White42GREEN).replace("1","");
      qDebug() << "genFirstFace()" << *solution;
-     if(*solution=="") return false; // On a pas trouvé de solution
-    return true;
+     for(int i =0; i < solution->length(); i++)
+     {
+        rotation(solution->at(i));
+     }
+
+     return true;
 }
 
 bool Cube::resolveFirstEdge(QString* solution) {
@@ -319,7 +374,7 @@ bool Cube::resolveFirstCross(QString* solution) {
      if(isResolveFirstCross()) return true;
      int min = nbPermuMax;
      *solution = gen(*this, "", 0, &min, &Cube::isResolveFirstCross).replace("1","");
-     qDebug() << "genFirstCross()" << *solution;
+     qDebug() << "genFirst4Cross()" << *solution;
      if(*solution=="") return false; // On a pas trouvé de solution
     return true;
 }
@@ -328,7 +383,7 @@ bool Cube::resolveFirst1Cross(QString* solution) {
      if(isResolveFirst1Cross()) return true;
      int min = nbPermuMax;
      *solution = gen(*this, "", 0, &min, &Cube::isResolveFirst1Cross).replace("1","");
-     qDebug() << "genFirstCross()" << *solution;
+     qDebug() << "genFirst1Cross()" << *solution;
      if(*solution=="") return false; // On a pas trouvé de solution
     return true;
 }
@@ -336,7 +391,7 @@ bool Cube::resolveFirst2Cross(QString* solution) {
      if(isResolveFirst2Cross()) return true;
      int min = nbPermuMax;
      *solution = gen(*this, "", 0, &min, &Cube::isResolveFirst2Cross).replace("1","");
-     qDebug() << "genFirstCross()" << *solution;
+     qDebug() << "genFirst2Cross()" << *solution;
      if(*solution=="") return false; // On a pas trouvé de solution
     return true;
 }
@@ -344,7 +399,7 @@ bool Cube::resolveFirst3Cross(QString* solution) {
      if(isResolveFirst3Cross()) return true;
      int min = nbPermuMax;
      *solution = gen(*this, "", 0, &min, &Cube::isResolveFirst3Cross).replace("1","");
-     qDebug() << "genFirstCross()" << *solution;
+     qDebug() << "genFirst3Cross()" << *solution;
      if(*solution=="") return false; // On a pas trouvé de solution
     return true;
 }

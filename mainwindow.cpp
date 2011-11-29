@@ -170,9 +170,6 @@ void MainWindow::start(){
     time.start();
 
     /* On resout la croix sur la première face */
-
-
-    /* On resout la croix sur la première face */
     if(!c.resolveFirst1Cross(&solution)) {
         QMessageBox::information(this, "La simulation a échouée.","");
         return;
@@ -219,7 +216,7 @@ void MainWindow::start(){
     solution = "";
     displayCube();
 
-    if(!c.resolveFirstFace(&solution)) {
+    /*if(!c.resolveFirstFace(&solution)) {
         QMessageBox::information(this, "La simulation a échouée.","");
         return;
     }
@@ -229,7 +226,7 @@ void MainWindow::start(){
         saveCube(solution.at(i));
     }
     solution = "";
-    displayCube();
+    displayCube();*/
 
     QString message= "La simulation s'est déroulée avec succès! \n";
     message += "Le temps d'éxécution a été de: ";

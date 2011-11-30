@@ -192,7 +192,7 @@ QString gen(Cube c, QString str, int i, int* min,bool (Cube::*pt2Member)() ){
     }
     if(i==nbPermuMax) return 0;
     QString bestSol = "";
-   // qDebug() << str << i;
+
     if(i <= *min && !str.endsWith("AAA")) {
         QString strCopy = str;
         QString isDone = gen(c.genRotation(QChar('A')), strCopy.append(QChar('A')),i+1,min, pt2Member);
@@ -260,11 +260,6 @@ QString gen(Cube c, QString str, int i, int* min,bool (Cube::*pt2Member)() ){
         }
     }
     return bestSol;
-}
-
-bool Cube::isResolveFirstEdge(){
-    if(cube[1] == WHITE && cube[3] == WHITE && cube[5] == WHITE && cube[7] == WHITE) return true;
-    return false;
 }
 
 bool Cube::isResolveFirstCross(){
@@ -438,20 +433,11 @@ bool Cube::resolveFirstFace(QString* solution) {
      return true;
 }
 
-bool Cube::resolveFirstEdge(QString* solution) {
-     if(isResolveFirstEdge()) return true;
-     int min = nbPermuMax;
-     *solution = gen(*this, "", 0, &min, &Cube::isResolveFirstEdge).replace("1","");
-     qDebug() << "genFirstEdge()" << *solution;
-     if(*solution=="") return false; // On a pas trouvé de solution
-    return true;
-}
-
 bool Cube::resolveFirstCross(QString* solution) {
      if(isResolveFirstCross()) return true;
      int min = nbPermuMax;
      *solution = gen(*this, "", 0, &min, &Cube::isResolveFirstCross).replace("1","");
-     qDebug() << "genFirst4Cross()" << *solution;
+     qDebug() << "genFirstCross()" << *solution;
      if(*solution=="") return false; // On a pas trouvé de solution
     return true;
 }

@@ -170,44 +170,9 @@ void MainWindow::start(){
     time.start();
 
     /* On resout la croix sur la première face */
-    if(!c.resolveFirst1Cross(&solution)) {
-        QMessageBox::information(this, "La simulation a échouée.","");
-        return;
-    }
-    for(int i =0; i < solution.length(); i++)
-    {
-        c.rotation(solution.at(i));
-        saveCube(solution.at(i));
-    }
-    this->displayCube();
-    solution = "";
+    if(!firstCrossHelper(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
+    if(!c.resolveFirstCross(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
 
-    if(!c.resolveFirst2Cross(&solution)) {
-        QMessageBox::information(this, "La simulation a échouée.","");
-        return;
-    }
-    for(int i =0; i < solution.length(); i++)
-    {
-        c.rotation(solution.at(i));
-        saveCube(solution.at(i));
-    }
-    solution = "";
-    displayCube();
-    if(!c.resolveFirst3Cross(&solution)) {
-        QMessageBox::information(this, "La simulation a échouée.","");
-        return;
-    }
-    for(int i =0; i < solution.length(); i++)
-    {
-        c.rotation(solution.at(i));
-        saveCube(solution.at(i));
-    }
-    solution = "";
-    displayCube();
-    if(!c.resolveFirstCross(&solution)) {
-        QMessageBox::information(this, "La simulation a échouée.","");
-        return;
-    }
     for(int i =0; i < solution.length(); i++)
     {
         c.rotation(solution.at(i));
@@ -216,17 +181,14 @@ void MainWindow::start(){
     solution = "";
     displayCube();
 
-    /*if(!c.resolveFirstFace(&solution)) {
-        QMessageBox::information(this, "La simulation a échouée.","");
-        return;
-    }
+    if(!c.resolveFirstFace(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
     for(int i =0; i < solution.length(); i++)
     {
         c.rotation(solution.at(i));
         saveCube(solution.at(i));
     }
     solution = "";
-    displayCube();*/
+    displayCube();
 
     QString message= "La simulation s'est déroulée avec succès! \n";
     message += "Le temps d'éxécution a été de: ";
@@ -236,7 +198,34 @@ void MainWindow::start(){
     message += ".\nLa simulation a été enregistrée dans le fichier: output.txt";
     QMessageBox::information(this, "Simulation terminée!", message);
 }
+bool MainWindow::firstCrossHelper(QString* solution){
+    if(!c.resolveFirst1Cross(solution)) return false;
+    for(int i =0; i < solution->length(); i++){
+        c.rotation(solution->at(i));
+        saveCube(solution->at(i));
+    }
+    displayCube();
+    *solution = "";
 
+    if(!c.resolveFirst2Cross(solution)) return false;
+    for(int i =0; i < solution->length(); i++)
+    {
+        c.rotation(solution->at(i));
+        saveCube(solution->at(i));
+    }
+    *solution = "";
+    displayCube();
+
+    if(!c.resolveFirst3Cross(solution)) return false;
+    for(int i =0; i < solution->length(); i++)
+    {
+        c.rotation(solution->at(i));
+        saveCube(solution->at(i));
+    }
+    *solution = "";
+    displayCube();
+    return true;
+}
 
 /* Méthodes d'initialisation de la GUI */
 void MainWindow::creerActions(){

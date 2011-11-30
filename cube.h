@@ -30,7 +30,6 @@ private:
     unsigned int cube[54];
     unsigned int rotationCount;
 
-    bool isResolveFirstEdge();
     bool isResolveFirstCross();
     bool isResolveFirstFace();
     bool isResolveFirst1Cross();

@@ -30,6 +30,7 @@ public:
     void saveCube(QChar r);
     void initOutput();
     QColor color(int i);
+    bool firstCrossHelper(QString* solution);
 
      /* GUI */
 private:

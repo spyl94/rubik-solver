@@ -20,6 +20,8 @@ MainWindow::MainWindow(){
     tableWidget->horizontalHeader()->setResizeMode (QHeaderView::Stretch);
     setCentralWidget(tableWidget);
 
+   helper = true;
+
     initOutput(); // Preparation fichier output.txt
     displayCube();
 
@@ -170,7 +172,7 @@ void MainWindow::start(){
     time.start();
 
     /* On resout la croix sur la première face */
-    if(!firstCrossHelper(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
+    if(helper) if(!firstCrossHelper(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
     if(!c.resolveFirstCross(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
     for(int i =0; i < solution.length(); i++)
     {
@@ -182,6 +184,15 @@ void MainWindow::start(){
     progression->setValue(20);
 
     /* On resout la première face */
+    if(!c.resolveFirst1Face(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
+    for(int i =0; i < solution.length(); i++)
+    {
+        c.rotation(solution.at(i));
+        saveCube(solution.at(i));
+    }
+    solution = "";
+    displayCube();
+
     if(!c.resolveFirstFace(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
     for(int i =0; i < solution.length(); i++)
     {

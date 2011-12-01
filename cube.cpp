@@ -298,12 +298,14 @@ bool Cube::isResolveFirst3Cross(){
 }
 
 bool Cube::is8Corner() {
-    if(cube[35]==ORANGE && cube[45] == WHITE && cube[42] == GREEN && isResolveFirstCross()) return true;
+    /*if(cube[35]==ORANGE && cube[45] == WHITE && cube[42] == GREEN && isResolveFirstCross()) return true;
     if(cube[35]==WHITE && cube[45] == ORANGE && cube[42] == GREEN && isResolveFirstCross()) return true;
     if(cube[35]==ORANGE && cube[45] == GREEN && cube[42] == WHITE && isResolveFirstCross()) return true;
     if(cube[35]==WHITE && cube[45] == GREEN && cube[42] == ORANGE && isResolveFirstCross()) return true;
     if(cube[35]==GREEN && cube[45] == WHITE && cube[42] == ORANGE && isResolveFirstCross()) return true;
-    if(cube[35]==GREEN && cube[45] == ORANGE && cube[42] == WHITE && isResolveFirstCross()) return true;
+    if(cube[35]==GREEN && cube[45] == ORANGE && cube[42] == WHITE && isResolveFirstCross()) return true;*/
+
+//    if(cube[15]==WHITE && cube[33]==GREEN && cube[51] == ORANGE && isResolveFirstCross()) return true;
     return false;
 }
 
@@ -315,18 +317,22 @@ bool Cube::is6Corner() {
     if(cube[15]==WHITE && cube[51] == BLUE && cube[33] == ORANGE && isResolveFirstCross()) return true;
     if(cube[15]==BLUE && cube[51] == WHITE && cube[33] == ORANGE && isResolveFirstCross()) return true;
     if(cube[15]==BLUE && cube[51] == ORANGE && cube[33] == WHITE && isResolveFirstCross()) return true;
+
+    //if(cube[24]==WHITE && cube[9] == ORANGE && cube[53]==BLUE && isResolveFirstCross()) return true;
     return false;
 }
 
 bool Cube::is0Corner() {
-    if(cube[8] != WHITE && cube[36] != GREEN && cube[29] != ORANGE) return false;
-    if(cube[6] != WHITE && cube[17] != BLUE && cube[27] != ORANGE) return false;
+    if(cube[8] != WHITE || cube[36] != GREEN || cube[29] != ORANGE) return false;
+    if(cube[6] != WHITE || cube[17] != BLUE || cube[27] != ORANGE) return false;
     if(cube[9]==RED && cube[53] == WHITE && cube[24] == BLUE && isResolveFirstCross()) return true;
     if(cube[9]==WHITE && cube[53] == RED && cube[24] == BLUE && isResolveFirstCross()) return true;
     if(cube[9]==RED && cube[53] == BLUE && cube[24] == WHITE && isResolveFirstCross()) return true;
     if(cube[9]==WHITE && cube[53] == BLUE && cube[24] == RED && isResolveFirstCross()) return true;
     if(cube[9]==BLUE && cube[53] == WHITE && cube[24] == RED && isResolveFirstCross()) return true;
     if(cube[9]==BLUE && cube[53] == RED && cube[24] == WHITE && isResolveFirstCross()) return true;
+
+    //if(cube[44] == WHITE && cube[18] == ORANGE && cube[47] == BLUE && isResolveFirstCross()) return true;
     return false;
 }
 
@@ -340,6 +346,8 @@ bool Cube::is2Corner() {
     if(cube[18]==WHITE && cube[44] == GREEN && cube[47] == RED && isResolveFirstCross()) return true;
     if(cube[18]==GREEN && cube[44] == WHITE && cube[47] == RED && isResolveFirstCross()) return true;
     if(cube[18]==GREEN && cube[44] == RED && cube[47] == WHITE && isResolveFirstCross()) return true;
+
+    //if(cube[35]==WHITE && cube[45] == GREEN && cube[42]==RED && isResolveFirstCross()) return true;
     return false;
 }
 
@@ -353,6 +361,21 @@ bool Cube::isResolveFirstFace() {
     if(cube[36] != GREEN || cube[37] != GREEN || cube[38] != GREEN) return false;
     return true;
 }
+bool Cube::isResolveFirst1Face() {
+    if(cube[8] == WHITE && cube[36] == GREEN && cube[29] == ORANGE && isResolveFirstCross()) return true;
+    if(cube[6] == WHITE && cube[17] == BLUE && cube[27] == ORANGE && isResolveFirstCross()) return true;
+    if(cube[0] == WHITE && cube[26] == RED && cube[11] == BLUE && isResolveFirstCross()) return true;
+    if(cube[2] == WHITE && cube[38] == GREEN && cube[20] == RED && isResolveFirstCross()) return true;
+    return false;
+}
+
+bool Cube::isResolveFirst2Face() {
+    if(cube[6] == WHITE && cube[17] == BLUE && cube[27] == ORANGE && cube[8] == WHITE && cube[36] == GREEN && cube[29] == ORANGE && isResolveFirstCross()) return true;
+    if(cube[0] == WHITE && cube[26] == RED && cube[11] == BLUE && cube[6] == WHITE && cube[17] == BLUE && cube[27] == ORANGE && isResolveFirstCross()) return true;
+    if(cube[2] == WHITE && cube[38] == GREEN && cube[20] == RED && cube[0] == WHITE && cube[26] == RED && cube[11] == BLUE && isResolveFirstCross()) return true;
+    if(cube[6] == WHITE && cube[17] == BLUE && cube[27] == ORANGE && cube[2] == WHITE && cube[38] == GREEN && cube[20] == RED && isResolveFirstCross()) return true;
+    return false;
+}
 
 bool Cube::resolveFirstFace(QString* solution) {
      if(isResolveFirstFace()) return true;
@@ -360,10 +383,12 @@ bool Cube::resolveFirstFace(QString* solution) {
      QString tmp;
      Cube copy(getCube());
      int min = 20;
-     if(cube[8]!=WHITE || cube[29] != ORANGE || cube[36] != GREEN) {
+     *solution="";
+
+     if(!(copy.getColor(8)==WHITE && copy.getColor(29) == ORANGE && copy.getColor(36)==GREEN)) {
          tmp = gen(*this, "", 0, &min, &Cube::is8Corner ).replace("1","");
          qDebug() << "gen8()" << tmp;
-         if(tmp == "" && !is8Corner()) return false;
+         if(tmp == "" && !copy.is8Corner()) return false;
          for(int i =0; i < tmp.length(); i++) copy.rotation(tmp.at(i));
          while(!(copy.getColor(8)==WHITE && copy.getColor(29) == ORANGE && copy.getColor(36)==GREEN)){
              copy.rotation(QChar('A'));
@@ -372,16 +397,20 @@ bool Cube::resolveFirstFace(QString* solution) {
              copy.rotation(QChar('K'));
              tmp+="AEGK";
          }
+         /*copy.rotation(QChar('A'));
+         copy.rotation(QChar('K'));
+         copy.rotation(QChar('G'));
+         tmp+="AKG";*/
          solutionOptimizer(&tmp);
          *solution += tmp;
      }
      tmp = "";
      min = 20;
 
-     if(copy.getColor(6)!=WHITE || copy.getColor(27) != ORANGE || copy.getColor(17) != BLUE) {
+     if(!(copy.getColor(6)==WHITE && copy.getColor(27) == ORANGE && copy.getColor(17)==BLUE)) {
          tmp = gen(copy, "", 0, &min, &Cube::is6Corner).replace("1","");
          qDebug() << "gen6()" << tmp;
-         if(tmp == "" && !is6Corner()) return true;
+         if(tmp == "" && !copy.is6Corner()) return false;
          for(int i =0; i < tmp.length(); i++) copy.rotation(tmp.at(i));
          while(!(copy.getColor(6)==WHITE && copy.getColor(27) == ORANGE && copy.getColor(17)==BLUE)){
              copy.rotation(QChar('F'));
@@ -389,17 +418,21 @@ bool Cube::resolveFirstFace(QString* solution) {
              copy.rotation(QChar('L'));
              copy.rotation(QChar('K'));
              tmp+="FELK";
-         }
+         }/*
+         copy.rotation(QChar('F'));
+         copy.rotation(QChar('K'));
+         copy.rotation(QChar('L'));
+         tmp+="FKL";*/
          solutionOptimizer(&tmp);
          *solution += tmp;
      }
      tmp = "";
      min = 20;
 
-     if(copy.getColor(0)!=WHITE || copy.getColor(11) != BLUE || copy.getColor(26) != RED) {
+     if(!(copy.getColor(0)==WHITE && copy.getColor(11) == BLUE && copy.getColor(26)==RED)) {
          tmp = gen(copy, "", 0, &min, &Cube::is0Corner ).replace("1","");
          qDebug() << "gen0()" << tmp;
-         if(tmp == "" && !is0Corner()) return true;
+         if(tmp == "" && !copy.is0Corner()) return false;
          for(int i =0; i < tmp.length(); i++) copy.rotation(tmp.at(i));
          while(!(copy.getColor(0)==WHITE && copy.getColor(11) == BLUE && copy.getColor(26)==RED)) {
              copy.rotation(QChar('D'));
@@ -407,17 +440,21 @@ bool Cube::resolveFirstFace(QString* solution) {
              copy.rotation(QChar('J'));
              copy.rotation(QChar('K'));
              tmp+="DEJK";
-         }
+         }/*
+         copy.rotation(QChar('D'));
+         copy.rotation(QChar('K'));
+         copy.rotation(QChar('J'));
+         tmp+="DKJ";*/
          solutionOptimizer(&tmp);
          *solution += tmp;
      }
      tmp = "";
      min = 20;
 
-     if(copy.getColor(2)!=WHITE || copy.getColor(38) != GREEN || copy.getColor(20) != RED) {
+     if(!(copy.getColor(2)==WHITE && copy.getColor(38) == GREEN && copy.getColor(20)==RED)) {
          tmp = gen(copy, "", 0, &min, &Cube::is2Corner ).replace("1","");
          qDebug() << "gen2()" << tmp;
-         if(tmp == "" && !is2Corner()) return true;
+         if(tmp == "" && !copy.is2Corner()) return false;
          for(int i =0; i < tmp.length(); i++) copy.rotation(tmp.at(i));
          while(!(copy.getColor(2)==WHITE && copy.getColor(38) == GREEN && copy.getColor(20)==RED)){
              copy.rotation(QChar('C'));
@@ -425,11 +462,23 @@ bool Cube::resolveFirstFace(QString* solution) {
              copy.rotation(QChar('I'));
              copy.rotation(QChar('K'));
              tmp+="CEIK";
-         }
+         }/*
+         copy.rotation(QChar('C'));
+         copy.rotation(QChar('K'));
+         copy.rotation(QChar('I'));
+         tmp+="CKI";*/
          solutionOptimizer(&tmp);
          *solution += tmp;
      }
      return true;
+}
+bool Cube::resolveFirst1Face(QString* solution) {
+    if(isResolveFirst1Face()) return true;
+    int min = nbPermuMax;
+    *solution = gen(*this, "", 0, &min, &Cube::isResolveFirst1Face).replace("1","");
+    qDebug() << "genFirst1Face()" << *solution;
+    if(*solution=="") return false; // On a pas trouvé de solution
+   return true;
 }
 
 bool Cube::resolveFirstCross(QString* solution) {

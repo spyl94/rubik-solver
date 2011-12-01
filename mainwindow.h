@@ -38,6 +38,7 @@ private:
     void creerMenus();
     void creerBarresOutils();
     void creerBarreEtat();
+    bool helper;
     QLabel *messageStatus;
     QProgressBar *progression;
     QStatusBar *barreEtat;

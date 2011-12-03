@@ -484,7 +484,7 @@ bool Cube::resolveSecondEdge(QString* solution) {
         }
     }
     if(!copy.isResolveSecondEdgeGreen() && copy.isEdgeGreen()){
-        if(copy.getColor(43)== ORANGE){
+        if(copy.getColor(46)== ORANGE){
             copy.rotation(QString("KLEFEAKG"));
             tmp+="KLEFEAKG";
         } else {

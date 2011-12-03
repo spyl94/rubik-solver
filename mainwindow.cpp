@@ -198,7 +198,7 @@ void MainWindow::start(){
 
 
     if(!c.resolveSecondEdge(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
-    qDebug()<<solution;
+    //qDebug()<<solution;
     for(int i =0; i < solution.length(); i++)
     {
         c.rotation(solution.at(i));

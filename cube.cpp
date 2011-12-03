@@ -468,98 +468,51 @@ bool Cube::resolveFirstFace(QString* solution) {
 bool Cube::resolveSecondEdge(QString* solution) {
     if(isResolveSecondEdge()) return true;
 
-    QString tmp;
+    QString tmp = "";
     Cube copy(getCube());
 
-    int i = 0;
-    int min = 6;
-
-    if(!copy.isResolveSecondEdgeOrange() && copy.isEdgeOrange()){
+    if(copy.getColor(34) == ORANGE){
         if(copy.getColor(48) == BLUE){
-            copy.rotation(QString("KJEDEFKL"));
+            copy.rotation("KJEDEFKL");
             tmp+="KJEDEFKL";
-        } else {
-            copy.rotation(QString("EAKGKLEF"));
+        } if(copy.getColor(48) == GREEN){
+            copy.rotation("EAKGKLEF");
             tmp+="EAKGKLEF";
         }
     }
-    if(!copy.isResolveSecondEdgeGreen() && copy.isEdgeGreen()){
+    if(copy.getColor(43) == GREEN){
         if(copy.getColor(46)== ORANGE){
-            copy.rotation(QString("KLEFEAKG"));
+            copy.rotation("KLEFEAKG");
             tmp+="KLEFEAKG";
-        } else {
-            copy.rotation(QString("ECKIKGEA"));
+        } if(copy.getColor(46)== RED){
+            copy.rotation("ECKIKGEA");
             tmp+="ECKIKGEA";
         }
     }
-    if(!copy.isResolveSecondEdgeRed() && copy.isEdgeRed()){
+    if(copy.getColor(21) == RED){
         if(copy.getColor(50)== GREEN){
-            copy.rotation(QString("KGEAECKI"));
+            copy.rotation("KGEAECKI");
             tmp+="KGEAECKI";
-        } else {
-            copy.rotation(QString("EDKJKIEC"));
+        } if(copy.getColor(50)== BLUE){
+            copy.rotation("EDKJKIEC");
             tmp+="EDKJKIEC";
         }
     }
-    if(!copy.isResolveSecondEdgeBlue() && copy.isEdgeBlue()){
+    if(copy.getColor(12) == BLUE){
         if(copy.getColor(52)== RED){
             copy.rotation("KIECEDKJ");
             tmp+="KIECEDKJ";
-        } else {
+        } if(copy.getColor(52)== ORANGE){
             copy.rotation("EFKLKJED");
             tmp+="EFKLKJED";
         }
     }
     *solution += tmp;
-
-    if(!copy.isResolveSecondEdgeBlue()){
-        //on tente placer
-        tmp = gen(copy,"",0,&min,&Cube::isEdgeBlue);
-        if(tmp!=""){
-            qDebug() << "genEdgeBlue()" << tmp;
-            copy.rotation(tmp);
-            return copy.resolveSecondEdge(&(solution->append(tmp)));
-        }
-        //on cherche
-        if(!(copy.getColor(10)==BLUE && copy.getColor(25)==RED)){
-            if(copy.getColor(34)==RED && copy.getColor(48)==BLUE){
-                copy.rotation("E");
-                tmp="E";
-            }
-            copy.rotation("EFKLKJED");
-            tmp+="EFKLKJED";
-            return copy.resolveSecondEdge(&(solution->append(tmp)));
-        }
-        qDebug() << "problème";
-    }
-    return true;
-
-
-    if(!copy.isResolveSecondEdgeGreen()){
-        tmp = gen(copy,"",0,&min,&Cube::isEdgeGreen);
-        if(tmp!=""){
-            qDebug() << "genEdgeGreen()" << tmp;
-            copy.rotation(tmp);
-            return copy.resolveSecondEdge(&(solution->append(tmp)));
-        }
-    }
-    if(!copy.isResolveSecondEdgeOrange()){
-        tmp = gen(copy,"",0,&min,&Cube::isEdgeOrange);
-        if(tmp!=""){
-            qDebug() << "genEdgeOrange()" << tmp;
-            copy.rotation(tmp);
-            return copy.resolveSecondEdge(&(solution->append(tmp)));
-        }
-    }
-    if(!copy.isResolveSecondEdgeRed()){
-        tmp = gen(copy,"",0,&min,&Cube::isEdgeRed);
-        if(tmp!=""){
-            qDebug() << "genEdgeRed()" << tmp;
-            copy.rotation(tmp);
-            return copy.resolveSecondEdge(&(solution->append(tmp)));
-        }
-    }
-    return true;
+    if(copy.isResolveSecondEdge()) return true;
+    if(solution->endsWith("EEE")) return false;
+    copy.rotation("E");
+    *solution += "E";
+    return copy.resolveSecondEdge(solution);
 }
 
 bool Cube::isEdgeOrange(){
@@ -601,7 +554,7 @@ bool Cube::isResolveSecondEdgeRed(){
     return false;
 }
 bool Cube::isResolveSecondEdgeBlue(){
-    if(isResolveFirstFace() && cube[10]==BLUE && cube[25]==RED && cube[16]==RED && cube[30]==ORANGE) return true;
+    if(isResolveFirstFace() && cube[10]==BLUE && cube[25]==RED && cube[16]==BLUE && cube[30]==ORANGE) return true;
     return false;
 }
 

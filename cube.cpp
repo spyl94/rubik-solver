@@ -474,49 +474,90 @@ bool Cube::resolveSecondEdge(QString* solution) {
     int i = 0;
     int min = 6;
 
-    while(i<5) {
-        if(!copy.isResolveSecondEdgeOrange() && copy.isEdgeOrange()){
-            if(copy.getColor(48) == BLUE){
-                copy.rotation(QString("KJEDEFKL"));
-                tmp+="KJEDEFKL";
-            } else {
-                copy.rotation(QString("EAKGKLEF"));
-                tmp+="EAKGKLEF";
-            }
+    if(!copy.isResolveSecondEdgeOrange() && copy.isEdgeOrange()){
+        if(copy.getColor(48) == BLUE){
+            copy.rotation(QString("KJEDEFKL"));
+            tmp+="KJEDEFKL";
+        } else {
+            copy.rotation(QString("EAKGKLEF"));
+            tmp+="EAKGKLEF";
         }
-        if(!copy.isResolveSecondEdgeGreen() && copy.isEdgeGreen()){
-            if(copy.getColor(43)== ORANGE){
-                copy.rotation(QString("KLEFEAKG"));
-                tmp+="KLEFEAKG";
-            } else {
-                copy.rotation(QString("ECKIKGEA"));
-                tmp+="ECKIKGEA";
-            }
+    }
+    if(!copy.isResolveSecondEdgeGreen() && copy.isEdgeGreen()){
+        if(copy.getColor(43)== ORANGE){
+            copy.rotation(QString("KLEFEAKG"));
+            tmp+="KLEFEAKG";
+        } else {
+            copy.rotation(QString("ECKIKGEA"));
+            tmp+="ECKIKGEA";
         }
-        if(!copy.isResolveSecondEdgeRed() && copy.isEdgeRed()){
-            if(copy.getColor(50)== GREEN){
-                copy.rotation(QString("KGEAECKI"));
-                tmp+="KGEAECKI";
-            } else {
-                copy.rotation(QString("EDKJKIEC"));
-                tmp+="EDKJKIEC";
-            }
+    }
+    if(!copy.isResolveSecondEdgeRed() && copy.isEdgeRed()){
+        if(copy.getColor(50)== GREEN){
+            copy.rotation(QString("KGEAECKI"));
+            tmp+="KGEAECKI";
+        } else {
+            copy.rotation(QString("EDKJKIEC"));
+            tmp+="EDKJKIEC";
         }
-        if(!copy.isResolveSecondEdgeBlue() && copy.isEdgeBlue()){
-            if(copy.getColor(52)== RED){
-                copy.rotation(QString("KIECEDKJ"));
-                tmp+="KIECEDKJ";
-            } else {
-                copy.rotation(QString("EFKLKJED"));
-                tmp+="EFKLKJED";
-            }
-            *solution += tmp;
-            tmp = gen(copy,"",0,&min,&Cube::isEdgeBlue);
+    }
+    if(!copy.isResolveSecondEdgeBlue() && copy.isEdgeBlue()){
+        if(copy.getColor(52)== RED){
+            copy.rotation("KIECEDKJ");
+            tmp+="KIECEDKJ";
+        } else {
+            copy.rotation("EFKLKJED");
+            tmp+="EFKLKJED";
+        }
+    }
+    *solution += tmp;
+
+    if(!copy.isResolveSecondEdgeBlue()){
+        //on tente placer
+        tmp = gen(copy,"",0,&min,&Cube::isEdgeBlue);
+        if(tmp!=""){
+            qDebug() << "genEdgeBlue()" << tmp;
             copy.rotation(tmp);
-            *solution += tmp;
+            return copy.resolveSecondEdge(&(solution->append(tmp)));
         }
-        i++;
-        *solution += tmp;
+        //on cherche
+        if(!(copy.getColor(10)==BLUE && copy.getColor(25)==RED)){
+            if(copy.getColor(34)==RED && copy.getColor(48)==BLUE){
+                copy.rotation("E");
+                tmp="E";
+            }
+            copy.rotation("EFKLKJED");
+            tmp+="EFKLKJED";
+            return copy.resolveSecondEdge(&(solution->append(tmp)));
+        }
+        qDebug() << "problème";
+    }
+    return true;
+
+
+    if(!copy.isResolveSecondEdgeGreen()){
+        tmp = gen(copy,"",0,&min,&Cube::isEdgeGreen);
+        if(tmp!=""){
+            qDebug() << "genEdgeGreen()" << tmp;
+            copy.rotation(tmp);
+            return copy.resolveSecondEdge(&(solution->append(tmp)));
+        }
+    }
+    if(!copy.isResolveSecondEdgeOrange()){
+        tmp = gen(copy,"",0,&min,&Cube::isEdgeOrange);
+        if(tmp!=""){
+            qDebug() << "genEdgeOrange()" << tmp;
+            copy.rotation(tmp);
+            return copy.resolveSecondEdge(&(solution->append(tmp)));
+        }
+    }
+    if(!copy.isResolveSecondEdgeRed()){
+        tmp = gen(copy,"",0,&min,&Cube::isEdgeRed);
+        if(tmp!=""){
+            qDebug() << "genEdgeRed()" << tmp;
+            copy.rotation(tmp);
+            return copy.resolveSecondEdge(&(solution->append(tmp)));
+        }
     }
     return true;
 }

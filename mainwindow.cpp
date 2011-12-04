@@ -184,8 +184,6 @@ void MainWindow::start(){
     progression->setValue(20);
 
     /* On resout la première face */
-
-
     if(!c.resolveFirstFace(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
     for(int i =0; i < solution.length(); i++)
     {
@@ -196,7 +194,7 @@ void MainWindow::start(){
     displayCube();
     progression->setValue(40);
 
-
+    /* On résout le 2ème étage */
     if(!c.resolveSecondEdge(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
     for(int i =0; i < solution.length(); i++)
     {
@@ -217,6 +215,17 @@ void MainWindow::start(){
     solution = "";
     displayCube();
     progression->setValue(80);
+
+    if(!c.resolveThirdEdge(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
+    qDebug() << solution;
+    for(int i =0; i < solution.length(); i++)
+    {
+        c.rotation(solution.at(i));
+        saveCube(solution.at(i));
+    }
+    solution = "";
+    displayCube();
+    progression->setValue(90);
 
 
 

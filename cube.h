@@ -26,6 +26,7 @@ public:
     bool resolveFirstFace(QString* solution);
     bool resolveSecondEdge(QString* solution);
     bool resolveThirdCross(QString* solution);
+    bool resolveThirdEdge(QString* solution);
 
 
 
@@ -56,7 +57,9 @@ private:
     bool isResolveSecondEdgeBlue();
     bool isResolveSecondEdge();
 
+
     bool isResolveThirdCross();
+    bool isResolveThirdEdge();
 
 
 };

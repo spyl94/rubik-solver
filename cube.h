@@ -28,6 +28,7 @@ public:
     bool resolveThirdCross(QString* solution);
     bool resolveThirdEdge(QString* solution);
     bool resolveThirdEdgeCorner(QString* solution);
+    bool resolveCube(QString* solution);
 
 
 
@@ -35,6 +36,7 @@ public:
 private:
     unsigned int cube[54];
     unsigned int rotationCount;
+    bool rotation(liste l);
 
     bool isResolveFirstCross();
     bool isResolveFirstFace();
@@ -49,21 +51,16 @@ private:
     bool isEdgeBlue();
     bool isEdgeGreen();
     bool isEdgeRed();
-
-    bool rotation(liste l);
-
     bool isResolveSecondEdgeOrange();
     bool isResolveSecondEdgeGreen();
     bool isResolveSecondEdgeRed();
     bool isResolveSecondEdgeBlue();
     bool isResolveSecondEdge();
-
-
     bool isResolveThirdCross();
     bool isResolveThirdEdge();
     bool is2CornerThirdEdge();
     bool isResolveThirdEdgeCorner();
-
+    bool isResolve();
 
 };
 int solutionOptimizer(QString* str);

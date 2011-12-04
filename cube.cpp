@@ -410,8 +410,8 @@ bool Cube::resolveSecondEdge(QString* solution) {
     tmp = "";
     if(solution->endsWith("EEEE")){
         if(cube[10]!=BLUE && cube[25]!=RED){
-            copy.rotation("KGEAECKI");
-            tmp+="KGEAECKI";
+            copy.rotation("EDKJKIEC");
+            tmp+="EDKJKIEC";
         }
         else if(cube[30]!=ORANGE && cube[16]!=BLUE){
             copy.rotation("KJEDEFKL");
@@ -425,6 +425,7 @@ bool Cube::resolveSecondEdge(QString* solution) {
             copy.rotation("KLEFEAKG");
             tmp+="KLEFEAKG";
         }
+        else return false;
         *solution += tmp;
     }
     copy.rotation("E");
@@ -466,33 +467,43 @@ bool Cube::resolveThirdEdge(QString* solution){
     if(isResolveThirdEdge()) return true;
     Cube copy(getCube());
 
+    qDebug() << "resolveThirdEdge" << *solution;
+    if(solution->size() > 100) return false;
+
     if(copy.getColor(51)!=YELLOW && copy.getColor(45)!=YELLOW && copy.getColor(47) != YELLOW && copy.getColor(53)!= YELLOW){
-        solution->append("LKFKLKKF");
         copy.rotation("LKFKLKKF");
+        return copy.resolveThirdEdge(&(solution->append("LKFKLKKF")));
     }
-    else if((copy.getColor(47)==YELLOW && copy.getColor(51)!=YELLOW && copy.getColor(45) !=YELLOW && copy.getColor(53)!= YELLOW)||
-           (copy.is2CornerThirdEdge() && copy.getColor(42)==YELLOW)){
-        solution->append("LKFKLKKF");
+
+    if((copy.getColor(47)==YELLOW && copy.getColor(51)!=YELLOW && copy.getColor(45) !=YELLOW && copy.getColor(53)!= YELLOW) ||
+            (copy.is2CornerThirdEdge() && copy.getColor(42)==YELLOW) ||
+            (copy.getColor(51)!=YELLOW && copy.getColor(45)!=YELLOW && copy.getColor(47) != YELLOW && copy.getColor(53)!= YELLOW && copy.getColor(9)==YELLOW)
+            ){
         copy.rotation("LKFKLKKF");
+        return copy.resolveThirdEdge(&(solution->append("LKFKLKKF")));
     }
-    else if((copy.getColor(51)==YELLOW && copy.getColor(47)!=YELLOW && copy.getColor(45) !=YELLOW && copy.getColor(53)!= YELLOW)||
-            (copy.is2CornerThirdEdge() && copy.getColor(9)==YELLOW)){
-        solution->append("IKCKIKKC");
+    if((copy.getColor(51)==YELLOW && copy.getColor(47)!=YELLOW && copy.getColor(45) !=YELLOW && copy.getColor(53)!= YELLOW) ||
+            (copy.is2CornerThirdEdge() && copy.getColor(9)==YELLOW) ||
+            (copy.getColor(51)!=YELLOW && copy.getColor(45)!=YELLOW && copy.getColor(47) != YELLOW && copy.getColor(53)!= YELLOW && copy.getColor(42)==YELLOW)
+            ){
         copy.rotation("IKCKIKKC");
+        return copy.resolveThirdEdge(&(solution->append("IKCKIKKC")));
     }
-    else if((copy.getColor(45)==YELLOW && copy.getColor(47)!=YELLOW && copy.getColor(51) !=YELLOW && copy.getColor(53)!= YELLOW)||
-            (copy.is2CornerThirdEdge() && copy.getColor(18)==YELLOW)){
-            solution->append("GKAKGKKA");
-            copy.rotation("GKAKGKKA");
+    if((copy.getColor(45)==YELLOW && copy.getColor(47)!=YELLOW && copy.getColor(51) !=YELLOW && copy.getColor(53)!= YELLOW) ||
+            (copy.is2CornerThirdEdge() && copy.getColor(18)==YELLOW) ||
+            (copy.getColor(51)!=YELLOW && copy.getColor(45)!=YELLOW && copy.getColor(47) != YELLOW && copy.getColor(53)!= YELLOW && copy.getColor(33)==YELLOW)
+            ){
+        copy.rotation("GKAKGKKA");
+        return copy.resolveThirdEdge(&(solution->append("GKAKGKKA")));
     }
-    else if((copy.getColor(53)==YELLOW && copy.getColor(47)!=YELLOW && copy.getColor(51) !=YELLOW && copy.getColor(45)!= YELLOW) ||
-            (copy.is2CornerThirdEdge() && copy.getColor(33)==YELLOW)){
-        solution->append("JKDKJKKD");
+    if((copy.getColor(53)==YELLOW && copy.getColor(47)!=YELLOW && copy.getColor(51) !=YELLOW && copy.getColor(45)!= YELLOW) ||
+            (copy.is2CornerThirdEdge() && copy.getColor(33)==YELLOW) ||
+            (copy.getColor(51)!=YELLOW && copy.getColor(45)!=YELLOW && copy.getColor(47) != YELLOW && copy.getColor(53)!= YELLOW && copy.getColor(18)==YELLOW)
+            ){
         copy.rotation("JKDKJKKD");
-    } else {
-        return false;
+        return copy.resolveThirdEdge(&(solution->append("JKDKJKKD")));
     }
-    return copy.resolveThirdEdge(solution);
+    return false;
 }
 
 /**
@@ -521,14 +532,22 @@ bool Cube::resolveThirdEdgeCorner(QString* solution){
         copy.rotation("CJCAAIDCAAIIE");
         return copy.resolveThirdEdgeCorner(&(solution->append("CJCAAIDCAAIIE")));
     }
-    else {
-        if(solution->endsWith("EEEE")) {
-            copy.rotation("DLDCCJFDCCJJE");
-            return copy.resolveThirdEdgeCorner(&(solution->append("DLDCCJFDCCJJE")));
-        }
-        copy.rotation("E");
-        return copy.resolveThirdEdgeCorner(&(solution->append("E")));
+    if(solution->endsWith("EEEE")) {
+        copy.rotation("DLDCCJFDCCJJE");
+        return copy.resolveThirdEdgeCorner(&(solution->append("DLDCCJFDCCJJE")));
     }
+    copy.rotation("E");
+    return copy.resolveThirdEdgeCorner(&(solution->append("E")));
+}
+/**
+ * Oriente les arrètes de la troisième face du cube pour le résoudre.
+ *
+ * Parametre solution : contient la liste des opération pour résoudre la face en sortie de la fonction.
+ * Retourne : vrai si réussi, faux sinon
+ */
+bool Cube::resolveCube(QString* solution){
+    if(isResolve())return true;
+
     return true;
 }
 
@@ -718,13 +737,24 @@ bool Cube::is2CornerThirdEdge(){
     if(cube[51]==YELLOW && cube[45] == YELLOW) return true;
     if(cube[51]==YELLOW && cube[47] == YELLOW) return true;
     if(cube[51]==YELLOW && cube[53] == YELLOW) return true;
-    if(cube[53]==YELLOW && cube[47] == YELLOW) return true;
-    if(cube[53]==YELLOW && cube[49] == YELLOW) return true;
-    if(cube[47]==YELLOW && cube[49] == YELLOW) return true;
+    if(cube[45]==YELLOW && cube[47] == YELLOW) return true;
+    if(cube[45]==YELLOW && cube[53] == YELLOW) return true;
+    if(cube[47]==YELLOW && cube[53] == YELLOW) return true;
     return false;
 }
 
 bool Cube::isResolveThirdEdgeCorner(){
     if(isResolveThirdEdge() && cube[35]==ORANGE && cube[33]==ORANGE && cube[42]==GREEN && cube[44]==GREEN && cube[18]==RED && cube[24]==RED && cube[9]==BLUE) return true;
     return false;
+}
+
+bool Cube::isResolve(){
+    int i = 0;
+    for(; i<9;  i++) if(cube[i] != WHITE) return false;
+    for(; i<18; i++) if(cube[i] != BLUE)  return false;
+    for(; i<27; i++) if(cube[i] != RED)   return false;
+    for(; i<36; i++) if(cube[i] != ORANGE)return false;
+    for(; i<45; i++) if(cube[i] != GREEN) return false;
+    for(; i<54; i++) if(cube[i] != YELLOW)return false;
+    return true;
 }

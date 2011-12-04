@@ -20,7 +20,7 @@ MainWindow::MainWindow(){
     tableWidget->horizontalHeader()->setResizeMode (QHeaderView::Stretch);
     setCentralWidget(tableWidget);
 
-   helper = true;
+    helper = true;
 
     initOutput(); // Preparation fichier output.txt
     displayCube();
@@ -51,6 +51,8 @@ void MainWindow::start(){
     if(!solver(&Cube::resolveThirdCross,70)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdCross");
     if(!solver(&Cube::resolveThirdEdge,80)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdEdge");
     if(!solver(&Cube::resolveThirdEdgeCorner,90)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdEdgeCorner");
+    if(!solver(&Cube::resolveCube,100)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdEdgeCorner");
+
 
     /* On affiche le message de fin */
     displayCube();

@@ -22,9 +22,12 @@ private:
     QString mixture; // contient les opérations de mélange.
     QTime time; //permet de calculer le temps d'éxécution.
 
+private slots:
+    void loadCubeMixture();
+    void start();
+
 public:
     MainWindow();
-    ~MainWindow();
     void displayCube();
     void cubeMixture();
     void saveCube(QChar r);
@@ -77,8 +80,6 @@ private:
     QTableWidget *tableWidget;
 
 private slots:
-    void loadCubeMixture();
-    void start();
     void rotationA();
     void rotationB();
     void rotationC();

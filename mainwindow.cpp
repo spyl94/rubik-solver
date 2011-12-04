@@ -26,9 +26,58 @@ MainWindow::MainWindow(){
     displayCube();
 
 }
-MainWindow::~MainWindow(){
 
+void MainWindow::start(){
+
+    /* Initialisation de l'affichage */
+    messageStatus->setText("Lancement en cours...");
+    progression->setRange(0,100);
+    progression->setValue(0);
+    progression->setVisible(true);
+
+    /* Lancement de l'algorithme */
+    c.restartRotationCount();
+    time.start();
+
+    /* On résout le cube */
+    if(helper) {
+        if(!solver(&Cube::resolveFirst1Cross,0)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirst1Cross");
+        if(!solver(&Cube::resolveFirst2Cross,0)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirst2Cross");
+        if(!solver(&Cube::resolveFirst3Cross,0)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirst3Cross");
+    }
+    if(!solver(&Cube::resolveFirstCross,20)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirstCross");
+    if(!solver(&Cube::resolveFirstFace,40)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirstFace");
+    if(!solver(&Cube::resolveSecondEdge,60)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveSecondEdge");
+    if(!solver(&Cube::resolveThirdCross,70)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdCross");
+    if(!solver(&Cube::resolveThirdEdge,80)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdEdge");
+    if(!solver(&Cube::resolveThirdEdgeCorner,90)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdEdgeCorner");
+
+    /* On affiche le message de fin */
+    displayCube();
+    QString message= "La simulation s'est déroulée avec succès! \n";
+    message += "Le temps d'éxécution a été de: ";
+    message += QString::number(time.elapsed());
+    message += "ms.\nLe nombre de rotations a été de ";
+    message += QString::number(c.getRotationCount());
+    message += ".\nLa simulation a été enregistrée dans le fichier: output.txt";
+    QMessageBox::information(this, "Simulation terminée!", message);
 }
+
+bool MainWindow::solver(bool (Cube::*pt2Member)(QString*), int j){
+    QString solution = "";
+    if(!(c.*pt2Member)(&solution)) return false;
+    qDebug() << solution;
+    for(int i =0; i < solutionOptimizer(&solution); i++)
+    {
+        c.rotation(solution.at(i));
+        saveCube(solution.at(i));
+    }
+    displayCube();
+    progression->setValue(j);
+    return true;
+}
+
+/* Méthodes d'affichage du cube */
 QColor MainWindow::color(int i) {
     // cf define.h
     switch(i){
@@ -48,6 +97,7 @@ QColor MainWindow::color(int i) {
         return QColor("white");
     }
 }
+
 void MainWindow::displayCube(){
     for(int i = 0; i < 3; i++){
         QTableWidgetItem *newItem = new QTableWidgetItem(tr("%1").arg(this->c.getColor(24+i)));
@@ -102,8 +152,9 @@ void MainWindow::displayCube(){
         tableWidget->setItem(i, 5, newItem);
     }
     qApp->processEvents();
-
 }
+
+/* Mélange du cube */
 void MainWindow::loadCubeMixture() {
     messageStatus->setText("Sélection du fichier");
     QString fichier = QFileDialog::getOpenFileName(this, "Ouvrir un fichier texte", QString(), "Text files (*.txt)");
@@ -120,9 +171,7 @@ void MainWindow::loadCubeMixture() {
     file.open(QIODevice::WriteOnly | QIODevice::Append); // maj du fichier texte
     QTextStream flux(&file);
     flux << "/** Etat Après mélange :  ";
-    for(int i =0; i < 54; i++){
-        flux << c.getColor(i);
-    }
+    for(int i =0; i < 54; i++) flux << c.getColor(i);
     flux << "\n";
     file.close();
     displayCube();
@@ -135,6 +184,8 @@ void MainWindow::cubeMixture(){
         saveCube(mixture.at(i));
     }
 }
+
+/* Méthodes d'enregistrement du fichier output.txt */
 void MainWindow::initOutput(){
     QFile fichier("output.txt");
     fichier.open(QIODevice::WriteOnly);
@@ -157,55 +208,6 @@ void MainWindow::saveCube(QChar r){
     }
     flux << "\n";
     fichier.close();
-}
-void MainWindow::start(){
-
-    /* Initialisation de l'affichage */
-    messageStatus->setText("Lancement en cours...");
-    progression->setRange(0,100);
-    progression->setValue(0);
-    progression->setVisible(true);
-
-    /* Lancement de l'algorithme */
-    c.restartRotationCount();
-    time.start();
-
-    /* On résout le cube */
-    if(helper) {
-        if(!solver(&Cube::resolveFirst1Cross,0)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirst1Cross");
-        if(!solver(&Cube::resolveFirst2Cross,0)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirst2Cross");
-        if(!solver(&Cube::resolveFirst3Cross,0)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirst3Cross");
-    }
-    if(!solver(&Cube::resolveFirstCross,20)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirstCross");
-    if(!solver(&Cube::resolveFirstFace,40)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirstFace");
-    if(!solver(&Cube::resolveSecondEdge,60)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveSecondEdge");
-    if(!solver(&Cube::resolveThirdCross,70)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdCross");
-    if(!solver(&Cube::resolveThirdEdge,80)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdEdge");
-    if(!solver(&Cube::resolveThirdEdgeCorner,90)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdEdgeCorner");
-
-    /* On affiche le message de fin */
-    displayCube();
-    QString message= "La simulation s'est déroulée avec succès! \n";
-    message += "Le temps d'éxécution a été de: ";
-    message += QString::number(time.elapsed());
-    message += "ms.\nLe nombre de rotations a été de ";
-    message += QString::number(c.getRotationCount());
-    message += ".\nLa simulation a été enregistrée dans le fichier: output.txt";
-    QMessageBox::information(this, "Simulation terminée!", message);
-}
-
-bool MainWindow::solver(bool (Cube::*pt2Member)(QString*), int j){
-    QString solution = "";
-    if(!(c.*pt2Member)(&solution)) return false;
-    qDebug() << solution;
-    for(int i =0; i < solutionOptimizer(&solution); i++)
-    {
-        c.rotation(solution.at(i));
-        saveCube(solution.at(i));
-    }
-    displayCube();
-    progression->setValue(j);
-    return true;
 }
 
 /* Méthodes d'initialisation de la GUI */

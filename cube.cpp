@@ -365,6 +365,7 @@ bool Cube::isResolveFirstFace() {
     if(cube[36] != GREEN || cube[37] != GREEN || cube[38] != GREEN) return false;
     return true;
 }
+/*
 bool Cube::isResolveFirst1Face() {
     if(cube[8] == WHITE && cube[36] == GREEN && cube[29] == ORANGE && isResolveFirstCross()) return true;
     if(cube[6] == WHITE && cube[17] == BLUE && cube[27] == ORANGE && isResolveFirstCross()) return true;
@@ -380,7 +381,7 @@ bool Cube::isResolveFirst2Face() {
     if(cube[6] == WHITE && cube[17] == BLUE && cube[27] == ORANGE && cube[2] == WHITE && cube[38] == GREEN && cube[20] == RED && isResolveFirstCross()) return true;
     return false;
 }
-
+*/
 bool Cube::resolveFirstFace(QString* solution) {
      if(isResolveFirstFace()) return true;
 
@@ -562,15 +563,6 @@ bool Cube::isResolveSecondEdge(){
     return isResolveSecondEdgeOrange() && isResolveSecondEdgeGreen() && isResolveSecondEdgeRed() && isResolveSecondEdgeBlue();
 }
 
-bool Cube::resolveFirst1Face(QString* solution) {
-    if(isResolveFirst1Face()) return true;
-    int min = nbPermuMax;
-    *solution = gen(*this, "", 0, &min, &Cube::isResolveFirst1Face).replace("1","");
-    qDebug() << "genFirst1Face()" << *solution;
-    if(*solution=="") return false; // On a pas trouvé de solution
-   return true;
-}
-
 bool Cube::resolveFirstCross(QString* solution) {
      if(isResolveFirstCross()) return true;
      int min = nbPermuMax;
@@ -603,4 +595,27 @@ bool Cube::resolveFirst3Cross(QString* solution) {
      qDebug() << "genFirst3Cross()" << *solution;
      if(*solution=="") return false; // On a pas trouvé de solution
     return true;
+}
+
+bool Cube::resolveThirdCross(QString* solution) {
+    if(isResolveThirdCross()) return true;
+    qDebug() << *solution;
+    Cube copy(getCube());
+
+    if((cube[48]!=YELLOW && cube[46]!=YELLOW && cube[50]!=YELLOW && cube[52]!=YELLOW)||(cube[46]==YELLOW && cube[48]==YELLOW)){
+        copy.rotation("GKLEFA");
+        return copy.resolveThirdCross(&(solution->append("GKLEFA")));
+    }
+    if(cube[48]==YELLOW && cube[50]==YELLOW) {
+        copy.rotation("GLKFEA");
+        return copy.resolveThirdCross(&(solution->append("GLKFEA")));
+    }
+    if(solution->endsWith("EEE")) return false;
+    copy.rotation("E");
+    return copy.resolveThirdCross(&(solution->append("E")));
+}
+
+bool Cube::isResolveThirdCross() {
+    if(cube[48]==YELLOW && cube[46]==YELLOW && cube[50]==YELLOW && cube[52]==YELLOW) return true;
+    return false;
 }

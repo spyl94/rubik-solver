@@ -198,7 +198,6 @@ void MainWindow::start(){
 
 
     if(!c.resolveSecondEdge(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
-    //qDebug()<<solution;
     for(int i =0; i < solution.length(); i++)
     {
         c.rotation(solution.at(i));
@@ -207,6 +206,19 @@ void MainWindow::start(){
     solution = "";
     displayCube();
     progression->setValue(60);
+
+    if(!c.resolveThirdCross(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
+    qDebug() << solution;
+    for(int i =0; i < solution.length(); i++)
+    {
+        c.rotation(solution.at(i));
+        saveCube(solution.at(i));
+    }
+    solution = "";
+    displayCube();
+    progression->setValue(80);
+
+
 
     QString message= "La simulation s'est déroulée avec succès! \n";
     message += "Le temps d'éxécution a été de: ";

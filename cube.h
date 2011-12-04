@@ -27,6 +27,7 @@ public:
     bool resolveSecondEdge(QString* solution);
     bool resolveThirdCross(QString* solution);
     bool resolveThirdEdge(QString* solution);
+    bool resolveThirdEdgeCorner(QString* solution);
 
 
 
@@ -60,6 +61,8 @@ private:
 
     bool isResolveThirdCross();
     bool isResolveThirdEdge();
+    bool is2CornerThirdEdge();
+    bool isResolveThirdEdgeCorner();
 
 
 };

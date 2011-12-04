@@ -640,12 +640,61 @@ bool Cube::isResolveThirdCross() {
 bool Cube::resolveThirdEdge(QString* solution){
     if(isResolveThirdEdge()) return true;
     Cube copy(getCube());
-    solution->append("LKFKLKKF");
-    copy.rotation("LKFKLKKF");
-    return true;
+
+    if(copy.getColor(51)!=YELLOW && copy.getColor(45)!=YELLOW && copy.getColor(47) != YELLOW && copy.getColor(53)!= YELLOW){
+        solution->append("LKFKLKKF");
+        copy.rotation("LKFKLKKF");
+    }
+    else if((copy.getColor(47)==YELLOW && copy.getColor(51)!=YELLOW && copy.getColor(45) !=YELLOW && copy.getColor(53)!= YELLOW)||
+           (copy.is2CornerThirdEdge() && copy.getColor(42)==YELLOW)){
+        solution->append("LKFKLKKF");
+        copy.rotation("LKFKLKKF");
+    }
+    else if((copy.getColor(51)==YELLOW && copy.getColor(47)!=YELLOW && copy.getColor(45) !=YELLOW && copy.getColor(53)!= YELLOW)||
+            (copy.is2CornerThirdEdge() && copy.getColor(9)==YELLOW)){
+        solution->append("IKCKIKKC");
+        copy.rotation("IKCKIKKC");
+    }
+    else if((copy.getColor(45)==YELLOW && copy.getColor(47)!=YELLOW && copy.getColor(51) !=YELLOW && copy.getColor(53)!= YELLOW)||
+            (copy.is2CornerThirdEdge() && copy.getColor(18)==YELLOW)){
+            solution->append("GKAKGKKA");
+            copy.rotation("GKAKGKKA");
+    }
+    else if((copy.getColor(53)==YELLOW && copy.getColor(47)!=YELLOW && copy.getColor(51) !=YELLOW && copy.getColor(45)!= YELLOW) ||
+            (copy.is2CornerThirdEdge() && copy.getColor(33)==YELLOW)){
+        solution->append("JKDKJKKD");
+        copy.rotation("JKDKJKKD");
+    } else {
+        return false;
+    }
+    return copy.resolveThirdEdge(solution);
 }
 
 bool Cube::isResolveThirdEdge(){
     for(int i =45; i < 54; i++) if(cube[i] != YELLOW) return false;
+    return true;
+}
+
+bool Cube::is2CornerThirdEdge(){
+    if(cube[51]==YELLOW && cube[45] == YELLOW) return true;
+    if(cube[51]==YELLOW && cube[47] == YELLOW) return true;
+    if(cube[51]==YELLOW && cube[53] == YELLOW) return true;
+    if(cube[53]==YELLOW && cube[47] == YELLOW) return true;
+    if(cube[53]==YELLOW && cube[49] == YELLOW) return true;
+    if(cube[47]==YELLOW && cube[49] == YELLOW) return true;
+    return false;
+}
+
+bool Cube::isResolveThirdEdgeCorner(){
+    if(isResolveThirdEdge() && cube[35]==ORANGE && cube[33]==ORANGE && cube[42]==GREEN && cube[44]==GREEN && cube[18]==RED && cube[24]==RED && cube[9]==BLUE) return true;
+    return false;
+}
+
+bool Cube::resolveThirdEdgeCorner(QString* solution){
+    if(isResolveThirdEdgeCorner()) return true;
+    Cube copy(getCube());
+
+    //solution->append("FGFDDLGFDDLLE");
+    //copy.rotation("FGFDDLGFDDLLE");
     return true;
 }

@@ -227,7 +227,16 @@ void MainWindow::start(){
     displayCube();
     progression->setValue(90);
 
-
+    if(!c.resolveThirdEdgeCorner(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
+    qDebug() << solution;
+    for(int i =0; i < solution.length(); i++)
+    {
+        c.rotation(solution.at(i));
+        saveCube(solution.at(i));
+    }
+    solution = "";
+    displayCube();
+    progression->setValue(95);
 
     QString message= "La simulation s'est déroulée avec succès! \n";
     message += "Le temps d'éxécution a été de: ";

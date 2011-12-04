@@ -30,7 +30,7 @@ public:
     void saveCube(QChar r);
     void initOutput();
     QColor color(int i);
-    bool firstCrossHelper(QString* solution);
+    bool solver(bool (Cube::*pt2Member)(QString*), int j);
 
      /* GUI */
 private:

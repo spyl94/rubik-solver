@@ -168,76 +168,23 @@ void MainWindow::start(){
 
     /* Lancement de l'algorithme */
     c.restartRotationCount();
-    QString solution = "";
     time.start();
 
-    /* On resout la croix sur la première face */
-    if(helper) if(!firstCrossHelper(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
-    if(!c.resolveFirstCross(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
-    for(int i =0; i < solution.length(); i++)
-    {
-        c.rotation(solution.at(i));
-        saveCube(solution.at(i));
+    /* On résout le cube */
+    if(helper) {
+        if(!solver(&Cube::resolveFirst1Cross,0)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirst1Cross");
+        if(!solver(&Cube::resolveFirst2Cross,0)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirst2Cross");
+        if(!solver(&Cube::resolveFirst3Cross,0)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirst3Cross");
     }
-    solution = "";
-    displayCube();
-    progression->setValue(20);
+    if(!solver(&Cube::resolveFirstCross,20)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirstCross");
+    if(!solver(&Cube::resolveFirstFace,40)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirstFace");
+    if(!solver(&Cube::resolveSecondEdge,60)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveSecondEdge");
+    if(!solver(&Cube::resolveThirdCross,70)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdCross");
+    if(!solver(&Cube::resolveThirdEdge,80)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdEdge");
+    if(!solver(&Cube::resolveThirdEdgeCorner,90)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdEdgeCorner");
 
-    /* On resout la première face */
-    if(!c.resolveFirstFace(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
-    for(int i =0; i < solution.length(); i++)
-    {
-        c.rotation(solution.at(i));
-        saveCube(solution.at(i));
-    }
-    solution = "";
+    /* On affiche le message de fin */
     displayCube();
-    progression->setValue(40);
-
-    /* On résout le 2ème étage */
-    if(!c.resolveSecondEdge(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
-    for(int i =0; i < solution.length(); i++)
-    {
-        c.rotation(solution.at(i));
-        saveCube(solution.at(i));
-    }
-    solution = "";
-    displayCube();
-    progression->setValue(60);
-
-    if(!c.resolveThirdCross(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
-    qDebug() << solution;
-    for(int i =0; i < solution.length(); i++)
-    {
-        c.rotation(solution.at(i));
-        saveCube(solution.at(i));
-    }
-    solution = "";
-    displayCube();
-    progression->setValue(80);
-
-    if(!c.resolveThirdEdge(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
-    qDebug() << solution;
-    for(int i =0; i < solution.length(); i++)
-    {
-        c.rotation(solution.at(i));
-        saveCube(solution.at(i));
-    }
-    solution = "";
-    displayCube();
-    progression->setValue(90);
-
-    if(!c.resolveThirdEdgeCorner(&solution)) return (void) QMessageBox::information(this, "La simulation a échouée.","");
-    qDebug() << solution;
-    for(int i =0; i < solution.length(); i++)
-    {
-        c.rotation(solution.at(i));
-        saveCube(solution.at(i));
-    }
-    solution = "";
-    displayCube();
-    progression->setValue(95);
-
     QString message= "La simulation s'est déroulée avec succès! \n";
     message += "Le temps d'éxécution a été de: ";
     message += QString::number(time.elapsed());
@@ -246,32 +193,18 @@ void MainWindow::start(){
     message += ".\nLa simulation a été enregistrée dans le fichier: output.txt";
     QMessageBox::information(this, "Simulation terminée!", message);
 }
-bool MainWindow::firstCrossHelper(QString* solution){
-    if(!c.resolveFirst1Cross(solution)) return false;
-    for(int i =0; i < solution->length(); i++){
-        c.rotation(solution->at(i));
-        saveCube(solution->at(i));
-    }
-    displayCube();
-    *solution = "";
 
-    if(!c.resolveFirst2Cross(solution)) return false;
-    for(int i =0; i < solution->length(); i++)
+bool MainWindow::solver(bool (Cube::*pt2Member)(QString*), int j){
+    QString solution = "";
+    if(!(c.*pt2Member)(&solution)) return false;
+    qDebug() << solution;
+    for(int i =0; i < solutionOptimizer(&solution); i++)
     {
-        c.rotation(solution->at(i));
-        saveCube(solution->at(i));
+        c.rotation(solution.at(i));
+        saveCube(solution.at(i));
     }
-    *solution = "";
     displayCube();
-
-    if(!c.resolveFirst3Cross(solution)) return false;
-    for(int i =0; i < solution->length(); i++)
-    {
-        c.rotation(solution->at(i));
-        saveCube(solution->at(i));
-    }
-    *solution = "";
-    displayCube();
+    progression->setValue(j);
     return true;
 }
 

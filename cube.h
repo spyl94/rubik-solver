@@ -66,5 +66,5 @@ private:
 
 
 };
-
+int solutionOptimizer(QString* str);
 #endif // CUBE_H

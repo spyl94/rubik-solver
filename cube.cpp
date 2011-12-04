@@ -175,7 +175,7 @@ int solutionOptimizer(QString* str) {
     str->replace("SS","Y");
     str->replace("TT","Z");
     str->replace("UU","@");
-    return str->size();
+    return str->length();
 }
 
 /**
@@ -694,7 +694,7 @@ bool Cube::resolveThirdEdgeCorner(QString* solution){
     if(isResolveThirdEdgeCorner()) return true;
     Cube copy(getCube());
 
-    //solution->append("FGFDDLGFDDLLE");
-    //copy.rotation("FGFDDLGFDDLLE");
+    //solution->append("FGFJJLGFJJLLE");
+    //copy.rotation("FGFJJLGFJJLLE");
     return true;
 }

@@ -2,10 +2,6 @@
   MANIPULATION DE LISTES
  ******************************************************************************/
 #include <iostream>
-#include <iomanip>
-#include <sstream>
-#include <string>
-#include <cstdarg>
 #include <QDebug>
 
 #include "liste.h"
@@ -69,15 +65,15 @@ liste listePermutations(int n, ...) {
  *
  */
 void detruire(noeud** l) {
-        if(l == NULL || *l == NULL) return;
-        noeud* n = NULL;
-        noeud* s = (*l);
-        while((*l)->succ != s) {
-            n = (*l);
-            (*l) = (*l)->succ;
-            delete(n);
-        }
-        delete *l;
+    if(l == NULL || *l == NULL) return;
+    noeud* n = NULL;
+    noeud* s = (*l);
+    while((*l)->succ != s) {
+        n = (*l);
+        (*l) = (*l)->succ;
+        delete(n);
+    }
+    delete *l;
 }
 
 /**
@@ -88,12 +84,12 @@ void detruire(noeud** l) {
  * Retourne : (booléen)? Bonne exécution : Paramètre incorrect.
  */
 bool deleteListePermutations(liste* l) {
-        if (l == NULL) return false;
-        while ((*l) != NULL) { // parcourrir la liste et liberer les maillons un a un
-            maillon* s = (*l);
-            (*l) = (*l)->succ;
-            detruire(&(s->info)); // detruire la sous liste circulaire
-            delete s;
-        }
-        return true;
+    if (l == NULL) return false;
+    while ((*l) != NULL) { // parcourrir la liste et liberer les maillons un a un
+        maillon* s = (*l);
+        (*l) = (*l)->succ;
+        detruire(&(s->info)); // detruire la sous liste circulaire
+        delete s;
+    }
+    return true;
 }

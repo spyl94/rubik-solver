@@ -11,13 +11,18 @@ class Cube
 public:
     Cube();
     Cube(unsigned int* tab);
-    int getColor(int i) {return cube[i];}
+    Cube(Cube const& pred);
     unsigned int* getCube() {return cube;}
-    void setCube(unsigned int *t) {for(int i=0; i <54; i++) cube[i] = t[i];}
+    unsigned int getRotationCount() {return rotationCount;}
+    int getColor(int i) {return cube[i];}
+    int getPermuMax() {return permuMax;}
+    QString getRotationList() {return rotationList;}
+    void restart();
     bool rotation(QChar r);
     bool rotation(QString str);
-    unsigned int getRotationCount() {return rotationCount;}
     void restartRotationCount() {rotationCount = 0;}
+    void setPermuMax(int i) {permuMax = i;}
+    void setRotationList(QString l) {rotationList = l;}
 
     Cube genRotation(QChar c);
     bool resolveFirstCross(QString* solution);
@@ -31,14 +36,12 @@ public:
     bool resolveThirdEdgeCorner(QString* solution);
     bool resolveCube(QString* solution);
 
-
-
-
 private:
     unsigned int cube[54];
     unsigned int rotationCount;
+    int permuMax;
+    QString rotationList;
     bool rotation(liste l);
-
     bool isResolveFirstCross();
     bool isResolveFirstFace();
     bool isResolveFirst1Cross();

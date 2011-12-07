@@ -20,8 +20,7 @@ class MainWindow : public QMainWindow
 private:
     Cube c; // notre objet cube.
     QString mixture; // contient les opérations de mélange.
-    QString final; //contient la liste des rotations pour résoudre le cube
-    unsigned int* initial;
+    QString final; // contient la liste des rotations résolvant le cube.
     QTime time; //permet de calculer le temps d'éxécution.
 
 private slots:
@@ -32,18 +31,26 @@ public:
     MainWindow();
     void displayCube();
     void cubeMixture();
-    void saveCube(Cube resolution,QChar r);
-    void initOutput(Cube resolution);
+    void saveCube(QChar r);
+    void initOutput();
     QColor color(int i);
     bool solver(bool (Cube::*pt2Member)(QString*), int j);
 
      /* GUI */
 private:
-    void creerActions();
-    void creerMenus();
-    void creerBarresOutils();
-    void creerBarreEtat();
-    bool helper;
+    void initActions();
+    void initMenus();
+    void initBarresOutils();
+    void initBarreEtat();
+    void initWindows();
+
+    /*  Options  */
+    QWidget optionsWindow, proposWindow; //fenêtre pour saisir les paramètres
+    QPushButton *valider;
+    QSpinBox *profondeurMax;
+    QComboBox *listeRotation;
+    QCheckBox *helper, *viewRotation, *refresh;
+
     QLabel *messageStatus;
     QProgressBar *progression;
     QStatusBar *barreEtat;
@@ -82,6 +89,9 @@ private:
     QTableWidget *tableWidget;
 
 private slots:
+    void openOptions();
+    void openPropos();
+    void closeOptions();
     void rotationA();
     void rotationB();
     void rotationC();

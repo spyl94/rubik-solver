@@ -6,10 +6,11 @@ using namespace std;
 
 MainWindow::MainWindow(){
     // Génération des widgets de la fenêtre principale
-    creerActions();
-    creerMenus();
-    creerBarresOutils();
-    creerBarreEtat();
+    initActions();
+    initMenus();
+    initBarresOutils();
+    initBarreEtat();
+    initWindows();
 
     //Définition de la fenetre principale
     setMaximumSize(800,450);
@@ -20,8 +21,9 @@ MainWindow::MainWindow(){
     tableWidget->horizontalHeader()->setResizeMode (QHeaderView::Stretch);
     setCentralWidget(tableWidget);
 
-    helper = true;
+    initOutput(); // Preparation fichier output.txt
     displayCube();
+
 }
 
 void MainWindow::start(){
@@ -34,25 +36,26 @@ void MainWindow::start(){
 
     /* Lancement de l'algorithme */
     c.restartRotationCount();
-    initial = c.getCube();
-    for(int i = 0 ; i < 54; i++) qDebug() << initial[i];
-    final="";
+    c.setPermuMax(profondeurMax->value());
+    c.setRotationList(listeRotation->currentText());
     time.start();
-
+    final="";
 
     /* On résout le cube */
-    if(helper) {
+    if(helper->isChecked()) {
         if(!solver(&Cube::resolveFirst1Cross,0)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirst1Cross");
         if(!solver(&Cube::resolveFirst2Cross,0)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirst2Cross");
         if(!solver(&Cube::resolveFirst3Cross,0)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirst3Cross");
     }
     if(!solver(&Cube::resolveFirstCross,20)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirstCross");
+    if(viewRotation->isChecked()) QMessageBox::information(this, "La croix est terminée", "Le nombre de rotation a été de: "+QString::number(c.getRotationCount())+"\n"+final);
     if(!solver(&Cube::resolveFirstFace,40)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirstFace");
-    QMessageBox::information(this, "Premier étage terminé", QString::number(c.getRotationCount()));
+    if(viewRotation->isChecked()) QMessageBox::information(this, "La première face est terminée", "Le nombre de rotation a été de: "+QString::number(c.getRotationCount())+"\n"+final);
     if(!solver(&Cube::resolveSecondEdge,60)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveSecondEdge");
-    QMessageBox::information(this, "Deuxième étage terminé", QString::number(c.getRotationCount()));
+    if(viewRotation->isChecked()) QMessageBox::information(this, "Le deuxième étage est terminé", "Le nombre de rotation a été de: "+QString::number(c.getRotationCount())+"\n"+final);
     if(!solver(&Cube::resolveThirdCross,70)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdCross");
     if(!solver(&Cube::resolveThirdEdge,80)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdEdge");
+    if(viewRotation->isChecked()) QMessageBox::information(this, "La troisème face est placée", "Le nombre de rotation a été de: "+QString::number(c.getRotationCount())+"\n"+final);
     if(!solver(&Cube::resolveThirdEdgeCorner,90)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdEdgeCorner");
     if(!solver(&Cube::resolveCube,100)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdEdgeCorner");
 
@@ -70,14 +73,15 @@ void MainWindow::start(){
     message += final;
     QMessageBox::information(this, "Simulation terminée!", message);
 
-    Cube res;
-    res.setCube(initial);
-    for(int i =0; i < 54; i++) qDebug() << res.getColor(i);
-    initOutput(res);
+    /* on mélange de nouveau puis on enregistre les différents états*/
+    cubeMixture();
+    c.restartRotationCount();
+    initOutput();
     for(int i =0; i < final.length(); i++){
-        res.rotation(final.at(i));
-        saveCube(res,final.at(i));
+        c.rotation(final.at(i));
+        saveCube(final.at(i));
     }
+    c.restart();
 }
 
 bool MainWindow::solver(bool (Cube::*pt2Member)(QString*), int j){
@@ -167,7 +171,7 @@ void MainWindow::displayCube(){
         newItem->setBackgroundColor(color(this->c.getColor(45+(i%3))));
         tableWidget->setItem(i, 5, newItem);
     }
-    qApp->processEvents();
+    if(refresh->isChecked()) qApp->processEvents();
 }
 
 /* Mélange du cube */
@@ -183,37 +187,51 @@ void MainWindow::loadCubeMixture() {
     this->mixture = file.readLine();
     file.close();
     cubeMixture(); // Effectue le mélange
+    file.setFileName("output.txt");
+    file.open(QIODevice::WriteOnly | QIODevice::Append); // maj du fichier texte
+    QTextStream flux(&file);
+    flux << "/** Etat Après mélange :  ";
+    for(int i =0; i < 54; i++) flux << c.getColor(i);
+    flux << "\n";
+    file.close();
     displayCube();
     messageStatus->setText("Prêt");
 }
 void MainWindow::cubeMixture(){
     if(mixture == NULL) mixture = "JHGLDZGLYZ@DPU@IHKGRTJ@AWLCVXZSIASMYKCU@HGAXLMMWDDPNPTEKXR@";
-    c.rotation(mixture);
+    for (int i = 0; i < mixture.size(); ++i) {
+        c.rotation(mixture.at(i));
+        saveCube(mixture.at(i));
+    }
 }
 
 /* Méthodes d'enregistrement du fichier output.txt */
-void MainWindow::initOutput(Cube resolution){
+void MainWindow::initOutput(){
     QFile fichier("output.txt");
     fichier.open(QIODevice::WriteOnly);
     QTextStream flux(&fichier);
     flux << "/****** Debut de la simulation ******/ " << "\n";
     flux << "/** Etat initial       : ";
-    for(int i =0; i < 54; i++) flux << resolution.getColor(i);
+    for(int i =0; i < 54; i++){
+        flux << c.getColor(i);
+    }
     flux << "\n";
     fichier.close();
 }
-void MainWindow::saveCube(Cube resolution, QChar r){
+void MainWindow::saveCube(QChar r){
     QFile fichier("output.txt");
     fichier.open(QIODevice::WriteOnly | QIODevice::Append);
     QTextStream flux(&fichier);
-    flux << "/** Rotation n°" << resolution.getRotationCount() << " : " << r << " **/ ";
-    for(int i =0; i < 54; i++) flux << resolution.getColor(i);
+    flux << "/** Rotation n°" << c.getRotationCount() << " : " << r << " **/ ";
+    for(int i =0; i < 54; i++){
+        flux << c.getColor(i);
+    }
     flux << "\n";
     fichier.close();
 }
 
 /* Méthodes d'initialisation de la GUI */
-void MainWindow::creerActions(){
+void MainWindow::initActions(){
     actionOuvrirFichier = new QAction(tr("&Ouvrir Fichier"), this);
     actionOuvrirFichier->setShortcut(tr("Ctrl+T"));
     connect(actionOuvrirFichier, SIGNAL(triggered()), this, SLOT(loadCubeMixture()));
@@ -227,10 +245,10 @@ void MainWindow::creerActions(){
     connect(actionQuitter, SIGNAL(triggered()), qApp, SLOT(quit()));
 
     actionOptions = new QAction("&Options", this);
-    //connect(actionOptions, SIGNAL(triggered()), this, SLOT(ouvrirOptions()));
+    connect(actionOptions, SIGNAL(triggered()), this, SLOT(openOptions()));
 
     actionPropos = new QAction("&À propos du projet", this);
-    //connect(actionPropos, SIGNAL(triggered()), this, SLOT(ouvrirPropos()));
+    connect(actionPropos, SIGNAL(triggered()), this, SLOT(openPropos()));
 
     actionA = new QAction("&A",this);
     connect(actionA, SIGNAL(triggered()), this, SLOT(rotationA()));
@@ -288,7 +306,7 @@ void MainWindow::creerActions(){
     connect(actionAr, SIGNAL(triggered()), this, SLOT(rotationAr()));
 
 }
-void MainWindow::creerMenus(){
+void MainWindow::initMenus(){
     QMenu *menuFichier = menuBar()->addMenu("&Fichier");
         menuFichier->addAction(actionOuvrirFichier);
         menuFichier->addAction(actionLancer);
@@ -300,7 +318,7 @@ void MainWindow::creerMenus(){
     QMenu *menuAPropos = menuBar()->addMenu("&?");
            menuAPropos->addAction(actionPropos);
 }
-void MainWindow::creerBarresOutils(){
+void MainWindow::initBarresOutils(){
     QToolBar *toolBarNavigation = addToolBar(tr("Navigation"));
         toolBarNavigation->addAction(actionOuvrirFichier);
         toolBarNavigation->addAction(actionOptions);
@@ -334,7 +352,7 @@ void MainWindow::creerBarresOutils(){
         toolBarNavigation->addAction(actionZ);
         toolBarNavigation->addAction(actionAr);
 }
-void MainWindow::creerBarreEtat(){
+void MainWindow::initBarreEtat(){
     barreEtat = statusBar();
     messageStatus = new QLabel;
     barreEtat->addWidget(messageStatus);
@@ -345,6 +363,55 @@ void MainWindow::creerBarreEtat(){
     progression->setMaximumHeight(14);
     statusBar()->addWidget(progression, 1);
 }
+void  MainWindow::openOptions(){
+    optionsWindow.show();
+    connect(valider, SIGNAL(clicked()), this, SLOT(closeOptions()));
+}
+void MainWindow::openPropos(){
+    QLabel *label;
+    label = new QLabel("Programme de résolution du rubiks cube <br />Réalisé dans le cadre d'un projet de l'<a href=\"http://www.efrei.fr\">EFREI</a> par Spyl et Alexian.<br /><br />Le fichier à ouvrir doit respecter le format suivant: <br /> Contenir les lettres de A à Z ou @.",&proposWindow);
+    proposWindow.show();
+}
+
+void  MainWindow::closeOptions(){
+    optionsWindow.close();
+}
+void MainWindow::initWindows(){
+
+    proposWindow.setWindowTitle("A propos");
+    proposWindow.setMinimumSize(600,100);
+    optionsWindow.setWindowTitle("Options");
+    profondeurMax = new QSpinBox;
+    profondeurMax->setRange(3,20);
+    profondeurMax->setValue(9);
+    listeRotation = new QComboBox;
+    listeRotation->addItem("ABCDEFGHIJKL");
+    listeRotation->addItem("ABCDEFGHIJKLMNOPQRSTUVWXYZ@");
+    listeRotation->addItem("ABCDEFG");
+    helper = new QCheckBox;
+    helper->setChecked(true);
+    viewRotation = new QCheckBox;
+    viewRotation->setChecked(false);
+    refresh = new QCheckBox;
+    refresh->setChecked(true);
+    valider = new QPushButton;
+    valider->setText("Enregistrer les modifications");
+
+    //Mise en page de la Fenetre Options
+    QVBoxLayout *layout = new QVBoxLayout;
+    QFormLayout *formLayout = new QFormLayout;
+    formLayout->addRow("Profondeur de génération des rotations", profondeurMax);
+    formLayout->addRow("Rotations utilisées lors de la génération", listeRotation);
+    formLayout->addRow("Générer la croix pièce par pièce", helper);
+    formLayout->addRow("Afficher le nombre de rotations par étape", viewRotation);
+    formLayout->addRow("Actualiser l'affichage", refresh);
+    QHBoxLayout *hLayout = new QHBoxLayout;
+    hLayout->addWidget(valider);
+    layout->addLayout(formLayout);
+    layout->addLayout(hLayout);
+    optionsWindow.setLayout(layout);
+}
+
 void MainWindow::rotationA() {
     c.rotation(QChar('A'));
     displayCube();

@@ -13,8 +13,9 @@ public:
     Cube(unsigned int* tab);
     int getColor(int i) {return cube[i];}
     unsigned int* getCube() {return cube;}
+    void setCube(unsigned int *t) {for(int i=0; i <54; i++) cube[i] = t[i];}
     bool rotation(QChar r);
-    void rotation(QString str);
+    bool rotation(QString str);
     unsigned int getRotationCount() {return rotationCount;}
     void restartRotationCount() {rotationCount = 0;}
 
@@ -47,6 +48,10 @@ private:
     bool is6Corner();
     bool is0Corner();
     bool is2Corner();
+    bool is8CornerBottom();
+    bool is6CornerBottom();
+    bool is0CornerBottom();
+    bool is2CornerBottom();
     bool isEdgeOrange();
     bool isEdgeBlue();
     bool isEdgeGreen();

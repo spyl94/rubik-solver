@@ -20,6 +20,8 @@ class MainWindow : public QMainWindow
 private:
     Cube c; // notre objet cube.
     QString mixture; // contient les opérations de mélange.
+    QString final; //contient la liste des rotations pour résoudre le cube
+    unsigned int* initial;
     QTime time; //permet de calculer le temps d'éxécution.
 
 private slots:
@@ -30,8 +32,8 @@ public:
     MainWindow();
     void displayCube();
     void cubeMixture();
-    void saveCube(QChar r);
-    void initOutput();
+    void saveCube(Cube resolution,QChar r);
+    void initOutput(Cube resolution);
     QColor color(int i);
     bool solver(bool (Cube::*pt2Member)(QString*), int j);
 

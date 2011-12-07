@@ -20,19 +20,19 @@ using namespace std;
  * Retourne : la liste equivalente a t.
  */
 noeud* listecc(int n, int* t) {
-        if (t == NULL || n == 0) {
-            return NULL;
-        }
-        noeud* m = new noeud;
-        m->info = t[0];
-        noeud* l = m;
-        for (int i = 1; i < n; i++) {
-                m->succ = new noeud;
-                m->succ->info = t[i];
-                m = m->succ;
-        }
-        m->succ = l;
-        return l;
+    if (t == NULL || n == 0) {
+        return NULL;
+    }
+    noeud* m = new noeud;
+    m->info = t[0];
+    noeud* l = m;
+    for (int i = 1; i < n; i++) {
+        m->succ = new noeud;
+        m->succ->info = t[i];
+        m = m->succ;
+    }
+    m->succ = l;
+    return l;
 }
 
 /**
@@ -51,7 +51,7 @@ liste listePermutations(int n, ...) {
     liste l = m;
     for(int i = 0 ; i < n ; i++){ // pour chaqun des tableaux reçus...
         noeud* c = listecc(4, va_arg(ap, int*)); //on crée une sous liste chainée contenant les valeurs du tableau.
-        m->info = c; // que l'on ajoute à notre liste simplemetn chainée.
+        m->info = c; // que l'on ajoute à notre liste simplement chainée.
         if(i < n-1) {
             m->succ = new maillon;
             m = m->succ;
@@ -88,9 +88,7 @@ void detruire(noeud** l) {
  * Retourne : (booléen)? Bonne exécution : Paramètre incorrect.
  */
 bool deleteListePermutations(liste* l) {
-        if (l == NULL) {  // si un parametre est incorrect
-            return false;
-        }
+        if (l == NULL) return false;
         while ((*l) != NULL) { // parcourrir la liste et liberer les maillons un a un
             maillon* s = (*l);
             (*l) = (*l)->succ;

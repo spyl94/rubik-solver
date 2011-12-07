@@ -21,10 +21,7 @@ MainWindow::MainWindow(){
     setCentralWidget(tableWidget);
 
     helper = true;
-
-    initOutput(); // Preparation fichier output.txt
     displayCube();
-
 }
 
 void MainWindow::start(){
@@ -37,7 +34,11 @@ void MainWindow::start(){
 
     /* Lancement de l'algorithme */
     c.restartRotationCount();
+    initial = c.getCube();
+    for(int i = 0 ; i < 54; i++) qDebug() << initial[i];
+    final="";
     time.start();
+
 
     /* On résout le cube */
     if(helper) {
@@ -47,32 +48,45 @@ void MainWindow::start(){
     }
     if(!solver(&Cube::resolveFirstCross,20)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirstCross");
     if(!solver(&Cube::resolveFirstFace,40)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirstFace");
+    QMessageBox::information(this, "Premier étage terminé", QString::number(c.getRotationCount()));
     if(!solver(&Cube::resolveSecondEdge,60)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveSecondEdge");
+    QMessageBox::information(this, "Deuxième étage terminé", QString::number(c.getRotationCount()));
     if(!solver(&Cube::resolveThirdCross,70)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdCross");
     if(!solver(&Cube::resolveThirdEdge,80)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdEdge");
     if(!solver(&Cube::resolveThirdEdgeCorner,90)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdEdgeCorner");
     if(!solver(&Cube::resolveCube,100)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveThirdEdgeCorner");
 
+    displayCube();
+    solutionOptimizer(&final);
 
     /* On affiche le message de fin */
-    displayCube();
     QString message= "La simulation s'est déroulée avec succès! \n";
     message += "Le temps d'éxécution a été de: ";
     message += QString::number(time.elapsed());
     message += "ms.\nLe nombre de rotations a été de ";
-    message += QString::number(c.getRotationCount());
-    message += ".\nLa simulation a été enregistrée dans le fichier: output.txt";
+    message += QString::number(final.size());
+    message += ".\nLa simulation va être enregistrée dans le fichier: output.txt";
+    message += ".\nLa liste des rotations:\n";
+    message += final;
     QMessageBox::information(this, "Simulation terminée!", message);
+
+    Cube res;
+    res.setCube(initial);
+    for(int i =0; i < 54; i++) qDebug() << res.getColor(i);
+    initOutput(res);
+    for(int i =0; i < final.length(); i++){
+        res.rotation(final.at(i));
+        saveCube(res,final.at(i));
+    }
 }
 
 bool MainWindow::solver(bool (Cube::*pt2Member)(QString*), int j){
     QString solution = "";
     if(!(c.*pt2Member)(&solution)) return false;
     qDebug() << solution;
-    for(int i =0; i < solutionOptimizer(&solution); i++)
-    {
+    for(int i =0; i < solutionOptimizer(&solution); i++){
         c.rotation(solution.at(i));
-        saveCube(solution.at(i));
+        final += solution.at(i);
     }
     displayCube();
     progression->setValue(j);
@@ -96,7 +110,7 @@ QColor MainWindow::color(int i) {
     case 6:
         return QColor("yellow");
     default:
-        return QColor("white");
+        return QColor("black");
     }
 }
 
@@ -169,45 +183,31 @@ void MainWindow::loadCubeMixture() {
     this->mixture = file.readLine();
     file.close();
     cubeMixture(); // Effectue le mélange
-    file.setFileName("output.txt");
-    file.open(QIODevice::WriteOnly | QIODevice::Append); // maj du fichier texte
-    QTextStream flux(&file);
-    flux << "/** Etat Après mélange :  ";
-    for(int i =0; i < 54; i++) flux << c.getColor(i);
-    flux << "\n";
-    file.close();
     displayCube();
     messageStatus->setText("Prêt");
 }
 void MainWindow::cubeMixture(){
     if(mixture == NULL) mixture = "JHGLDZGLYZ@DPU@IHKGRTJ@AWLCVXZSIASMYKCU@HGAXLMMWDDPNPTEKXR@";
-    for (int i = 0; i < mixture.size(); ++i) {
-        c.rotation(mixture.at(i));
-        saveCube(mixture.at(i));
-    }
+    c.rotation(mixture);
 }
 
 /* Méthodes d'enregistrement du fichier output.txt */
-void MainWindow::initOutput(){
+void MainWindow::initOutput(Cube resolution){
     QFile fichier("output.txt");
     fichier.open(QIODevice::WriteOnly);
     QTextStream flux(&fichier);
     flux << "/****** Debut de la simulation ******/ " << "\n";
     flux << "/** Etat initial       : ";
-    for(int i =0; i < 54; i++){
-        flux << c.getColor(i);
-    }
+    for(int i =0; i < 54; i++) flux << resolution.getColor(i);
     flux << "\n";
     fichier.close();
 }
-void MainWindow::saveCube(QChar r){
+void MainWindow::saveCube(Cube resolution, QChar r){
     QFile fichier("output.txt");
     fichier.open(QIODevice::WriteOnly | QIODevice::Append);
     QTextStream flux(&fichier);
-    flux << "/** Rotation n°" << c.getRotationCount() << " : " << r << " **/ ";
-    for(int i =0; i < 54; i++){
-        flux << c.getColor(i);
-    }
+    flux << "/** Rotation n°" << resolution.getRotationCount() << " : " << r << " **/ ";
+    for(int i =0; i < 54; i++) flux << resolution.getColor(i);
     flux << "\n";
     fichier.close();
 }

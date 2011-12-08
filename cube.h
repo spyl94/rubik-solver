@@ -30,6 +30,10 @@ public:
     bool resolveFirst2Cross(QString* solution);
     bool resolveFirst3Cross(QString* solution);
     bool resolveFirstFace(QString* solution);
+    bool resolveFirst1Face(QString* solution);
+    bool resolveFirst2Face(QString* solution);
+    bool resolveFirst3Face(QString* solution);
+    bool resolveFirst4Face(QString* solution);
     bool resolveSecondEdge(QString* solution);
     bool resolveThirdCross(QString* solution);
     bool resolveThirdEdge(QString* solution);
@@ -47,6 +51,13 @@ private:
     bool isResolveFirst1Cross();
     bool isResolveFirst2Cross();
     bool isResolveFirst3Cross();
+    bool isResolveFirst1Face();
+    bool isResolveFirst2Face();
+    bool isResolveFirst3Face();
+    bool is1Cross();
+    bool is3Cross();
+    bool is5Cross();
+    bool is7Cross();
     bool is8Corner();
     bool is6Corner();
     bool is0Corner();

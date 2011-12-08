@@ -16,9 +16,7 @@ using namespace std;
  * Retourne : la liste equivalente a t.
  */
 noeud* listecc(int n, int* t) {
-    if (t == NULL || n == 0) {
-        return NULL;
-    }
+    if (t == NULL || n == 0) return NULL;
     noeud* m = new noeud;
     m->info = t[0];
     noeud* l = m;

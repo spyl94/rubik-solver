@@ -49,7 +49,7 @@ private:
     QPushButton *valider;
     QSpinBox *profondeurMax;
     QComboBox *listeRotation;
-    QCheckBox *helper, *viewRotation, *refresh;
+    QCheckBox *helper, *viewRotation, *refresh, *firstFace;
 
     QLabel *messageStatus;
     QProgressBar *progression;

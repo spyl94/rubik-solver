@@ -49,6 +49,12 @@ void MainWindow::start(){
     }
     if(!solver(&Cube::resolveFirstCross,20)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirstCross");
     if(viewRotation->isChecked()) QMessageBox::information(this, "La croix est terminée", "Le nombre de rotation a été de: "+QString::number(c.getRotationCount())+"\n"+final);
+    if(!helper->isChecked()) {
+        if(!solver(&Cube::resolveFirst1Face,20)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirst1Face");
+        if(!solver(&Cube::resolveFirst2Face,20)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirst2Face");
+        if(!solver(&Cube::resolveFirst3Face,20)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirst3Face");
+        if(!solver(&Cube::resolveFirst4Face,20)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirst4Face");
+    }
     if(!solver(&Cube::resolveFirstFace,40)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveFirstFace");
     if(viewRotation->isChecked()) QMessageBox::information(this, "La première face est terminée", "Le nombre de rotation a été de: "+QString::number(c.getRotationCount())+"\n"+final);
     if(!solver(&Cube::resolveSecondEdge,60)) return (void) QMessageBox::information(this, "La simulation a échouée.","resolveSecondEdge");
@@ -181,8 +187,7 @@ void MainWindow::loadCubeMixture() {
     QFile file(fichier);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
         QMessageBox::information(this, "Fichier", "Impossible d'ouvrir le fichier!");
-        messageStatus->setText("Prêt");
-        return;
+        return messageStatus->setText("Prêt");
     }
     this->mixture = file.readLine();
     file.close();
@@ -212,9 +217,7 @@ void MainWindow::initOutput(){
     QTextStream flux(&fichier);
     flux << "/****** Debut de la simulation ******/ " << "\n";
     flux << "/** Etat initial       : ";
-    for(int i =0; i < 54; i++){
-        flux << c.getColor(i);
-    }
+    for(int i =0; i < 54; i++) flux << c.getColor(i);
     flux << "\n";
     fichier.close();
 }
@@ -314,7 +317,6 @@ void MainWindow::initMenus(){
         menuFichier->addAction(actionQuitter);
     QMenu *menuEdition = menuBar()->addMenu("&Edition");
           menuEdition->addAction(actionOptions);
-          menuEdition->addAction(actionA);
     QMenu *menuAPropos = menuBar()->addMenu("&?");
            menuAPropos->addAction(actionPropos);
 }
@@ -394,6 +396,8 @@ void MainWindow::initWindows(){
     viewRotation->setChecked(false);
     refresh = new QCheckBox;
     refresh->setChecked(true);
+    firstFace = new QCheckBox;
+    firstFace->setChecked(false);
     valider = new QPushButton;
     valider->setText("Enregistrer les modifications");
 
@@ -403,6 +407,7 @@ void MainWindow::initWindows(){
     formLayout->addRow("Profondeur de génération des rotations", profondeurMax);
     formLayout->addRow("Rotations utilisées lors de la génération", listeRotation);
     formLayout->addRow("Générer la croix pièce par pièce", helper);
+    formLayout->addRow("Générer la première face par arborescence", firstFace);
     formLayout->addRow("Afficher le nombre de rotations par étape", viewRotation);
     formLayout->addRow("Actualiser l'affichage", refresh);
     QHBoxLayout *hLayout = new QHBoxLayout;
